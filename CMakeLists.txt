@@ -12,7 +12,7 @@ set_max_warning_level ()
 
 ##################################################    Options     ##################################################
 option(BUILD_SHARED_LIBS "Build shared (dynamic) libraries." ON)
-option(BUILD_TESTS "Build tests." OFF)
+option(BUILD_TESTS "Build tests." ON)
 
 
 ##################################################    Sources     ##################################################
@@ -54,7 +54,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<INSTALL_INTERFACE:include> PRIVATE source)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_INCLUDE_DIRS})
-target_link_libraries     (${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES})
+target_link_libraries     (${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES} gtest_main)
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${PROJECT_COMPILE_DEFINITIONS})
 set_target_properties     (${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -74,22 +74,9 @@ generate_export_header(${PROJECT_NAME}
 
 ##################################################    Testing     ##################################################
 if(BUILD_TESTS)
-  enable_testing     ()
-  set                (TEST_MAIN_NAME test_main)
-  set                (TEST_MAIN_SOURCES tests/internal/main.cc)
-  add_library        (${TEST_MAIN_NAME} OBJECT ${TEST_MAIN_SOURCES})
-  set_property       (TARGET ${TEST_MAIN_NAME} PROPERTY FOLDER tests)
-  assign_source_group(${TEST_MAIN_SOURCES})
-
-  file(GLOB PROJECT_TEST_CPPS tests/*.cc)
-  foreach(_SOURCE ${PROJECT_TEST_CPPS})
-    get_filename_component(_NAME ${_SOURCE} NAME_WE)
-    add_executable        (${_NAME} ${_SOURCE} $<TARGET_OBJECTS:${TEST_MAIN_NAME}>)
-    target_link_libraries (${_NAME} ${PROJECT_NAME})
-    add_test              (${_NAME} ${_NAME})
-    set_property          (TARGET ${_NAME} PROPERTY FOLDER tests)
-    assign_source_group   (${_SOURCE})
-  endforeach()
+  enable_testing ()
+  add_subdirectory(${CMAKE_BINARY_DIR}/googletest)
+  add_subdirectory (tests)
 endif()
 
 ##################################################  Installation  ##################################################
