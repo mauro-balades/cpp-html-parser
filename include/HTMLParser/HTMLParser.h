@@ -1,4 +1,6 @@
 
+#include <string>
+
 #include "HTMLDocument.h"
 
 #ifndef _HTMLPARSER_H_
@@ -13,7 +15,7 @@ namespace HTMLParser {
             Parser(std::string p_html);
 
         private:
-            Document _document;
+            Document * _document;
     };
 }
 
