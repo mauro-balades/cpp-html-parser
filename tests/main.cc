@@ -1,10 +1,10 @@
 
-#include <gtest.h>
+#include <gtest/gtest.h>
 
 class BasicsTest : public ::testing::Test {
 };
 
 TEST_F(BasicsTest, TestBackwardsCompat) {
 
-    ASSERT(true);
+    ASSERT_TRUE(true);
 }

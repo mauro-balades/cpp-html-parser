@@ -73,9 +73,9 @@ generate_export_header(${PROJECT_NAME}
 )
 
 ##################################################    Testing     ##################################################
-if(BUILD_TESTS)
-  enable_testing ()
-  add_subdirectory(${CMAKE_BINARY_DIR}/googletest)
+if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/googletest)
+  enable_testing   ()
+  add_subdirectory (${CMAKE_BINARY_DIR}/googletest)
   add_subdirectory (tests)
 endif()
 
@@ -86,4 +86,4 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-config
   RUNTIME DESTINATION bin)
 install(DIRECTORY include/ DESTINATION include)
 install(EXPORT  ${PROJECT_NAME}-config DESTINATION cmake)
-export (TARGETS ${PROJECT_NAME}        FILE        ${PROJECT_NAME}-config.cmake)
+export (TARGETS ${PROJECT_NAME} gtest_main gtest        FILE        ${PROJECT_NAME}-config.cmake)
