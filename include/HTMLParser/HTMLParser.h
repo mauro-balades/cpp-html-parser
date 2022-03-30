@@ -14,8 +14,10 @@ namespace HTMLParser {
             // TODO: add suport for "const char*" and add destructor
             Parser(std::string p_html);
 
+            Document* get_document() { return _document; }
+
         private:
-            Document * _document;
+            Document* _document;
     };
 }
 
