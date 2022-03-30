@@ -4,6 +4,14 @@
 
 namespace HTMLParser {
 
+    class Parser {
+
+        public:
+            // TODO: add suport for "const char*"
+            Parser(std::string p_html);
+
+            // ~Parser();
+    }
 }
 
 #endif /* _HTMLPARSER_H_ */
