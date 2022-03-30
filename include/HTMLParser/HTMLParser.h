@@ -12,7 +12,7 @@ namespace HTMLParser {
 
         private:
             std::string _html;
-    }
+    };
 }
 
 #endif /* _HTMLPARSER_H_ */
