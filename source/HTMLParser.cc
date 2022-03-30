@@ -1,5 +1,5 @@
 
-#include "HTMLParser.h"
+#include "HTMLParser/HTMLParser.h"
 
 namespace HTMLParser {
     Parser::Parser(std::string p_html) {

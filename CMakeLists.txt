@@ -14,9 +14,10 @@ set_max_warning_level ()
 option(BUILD_SHARED_LIBS "Build shared (dynamic) libraries." ON)
 option(BUILD_TESTS "Build tests." OFF)
 
+
 ##################################################    Sources     ##################################################
 file(GLOB_RECURSE PROJECT_HEADERS include/*.h include/*.hpp)
-file(GLOB_RECURSE PROJECT_SOURCES source/*.c source/*.cpp)
+file(GLOB_RECURSE PROJECT_SOURCES source/*.c source/*.cc)
 file(GLOB_RECURSE PROJECT_CMAKE_UTILS cmake/*.cmake)
 file(GLOB_RECURSE PROJECT_MISC *.md *.txt)
 set (PROJECT_EXPORT_HPP include/${PROJECT_NAME}/export.hpp)
@@ -48,7 +49,7 @@ include(import_library)
 
 ##################################################    Targets     ##################################################
 add_library(${PROJECT_NAME} ${PROJECT_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC 
+target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<INSTALL_INTERFACE:include> PRIVATE source)
@@ -65,7 +66,7 @@ endif()
 ##################################################    Postbuild   ##################################################
 include               (GenerateExportHeader)
 string                (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
-generate_export_header(${PROJECT_NAME} 
+generate_export_header(${PROJECT_NAME}
   EXPORT_FILE_NAME     ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/export.hpp
   EXPORT_MACRO_NAME    ${PROJECT_NAME_UPPER}_EXPORT
   STATIC_DEFINE        ${PROJECT_NAME_UPPER}_STATIC
@@ -75,12 +76,12 @@ generate_export_header(${PROJECT_NAME}
 if(BUILD_TESTS)
   enable_testing     ()
   set                (TEST_MAIN_NAME test_main)
-  set                (TEST_MAIN_SOURCES tests/internal/main.cpp)
+  set                (TEST_MAIN_SOURCES tests/internal/main.cc)
   add_library        (${TEST_MAIN_NAME} OBJECT ${TEST_MAIN_SOURCES})
   set_property       (TARGET ${TEST_MAIN_NAME} PROPERTY FOLDER tests)
   assign_source_group(${TEST_MAIN_SOURCES})
 
-  file(GLOB PROJECT_TEST_CPPS tests/*.cpp)
+  file(GLOB PROJECT_TEST_CPPS tests/*.cc)
   foreach(_SOURCE ${PROJECT_TEST_CPPS})
     get_filename_component(_NAME ${_SOURCE} NAME_WE)
     add_executable        (${_NAME} ${_SOURCE} $<TARGET_OBJECTS:${TEST_MAIN_NAME}>)

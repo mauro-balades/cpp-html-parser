@@ -6,3 +6,4 @@ Makefile
 HTMLParser-config.cmake
 cmake_install.cmake
 libHTMLParser.so
+install_manifest.txt
