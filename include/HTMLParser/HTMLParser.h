@@ -11,6 +11,9 @@ namespace HTMLParser {
             Parser(std::string p_html);
 
             // ~Parser();
+
+        private:
+            std::string _html;
     }
 }
 
