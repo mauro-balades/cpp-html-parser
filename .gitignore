@@ -13,3 +13,4 @@ bin/
 lib/
 third_party/googletest/
 tests/runUnitTests
+run-tests

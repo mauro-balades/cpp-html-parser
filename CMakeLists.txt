@@ -21,8 +21,8 @@ file(GLOB_RECURSE PROJECT_SOURCES source/*.c source/*.cc)
 file(GLOB_RECURSE PROJECT_CMAKE_UTILS cmake/*.cmake)
 file(GLOB_RECURSE PROJECT_MISC *.md *.txt)
 set (PROJECT_EXPORT_HPP include/${PROJECT_NAME}/export.hpp)
-set (PROJECT_FILES 
-  ${PROJECT_HEADERS} 
+set (PROJECT_FILES
+  ${PROJECT_HEADERS}
   ${PROJECT_SOURCES} 
   ${PROJECT_CMAKE_UTILS} 
   ${PROJECT_MISC} 
@@ -74,9 +74,13 @@ generate_export_header(${PROJECT_NAME}
 
 ##################################################    Testing     ##################################################
 if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest)
-  enable_testing   ()
-  add_subdirectory (${CMAKE_BINARY_DIR}/third_party/googletest)
-  add_subdirectory (tests)
+
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest EXCLUDE_FROM_ALL)
+  enable_testing()
+  include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+
+
 endif()
 
 ##################################################  Installation  ##################################################
