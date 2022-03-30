@@ -11,3 +11,4 @@ Testing/
 CTestTestfile.cmake
 bin/
 lib/
+third_party/googletest
