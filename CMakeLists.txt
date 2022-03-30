@@ -73,9 +73,9 @@ generate_export_header(${PROJECT_NAME}
 )
 
 ##################################################    Testing     ##################################################
-if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/googletest)
+if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest)
   enable_testing   ()
-  add_subdirectory (${CMAKE_BINARY_DIR}/googletest)
+  add_subdirectory (${CMAKE_BINARY_DIR}/third_party/googletest)
   add_subdirectory (tests)
 endif()
 
