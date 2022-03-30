@@ -7,10 +7,8 @@ namespace HTMLParser {
     class Parser {
 
         public:
-            // TODO: add suport for "const char*"
+            // TODO: add suport for "const char*" and add destructor
             Parser(std::string p_html);
-
-            // ~Parser();
 
         private:
             std::string _html;
