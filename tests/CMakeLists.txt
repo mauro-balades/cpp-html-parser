@@ -1,6 +1,7 @@
 # Source files
 set (SOURCE
     test_basics.cc
+    test_tokenizer.cc
 )
 
 # include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})

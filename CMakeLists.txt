@@ -17,7 +17,7 @@ option(BUILD_TESTS "Build tests." ON)
 
 ##################################################    Sources     ##################################################
 file(GLOB_RECURSE PROJECT_HEADERS include/*.h include/*.hpp)
-file(GLOB_RECURSE PROJECT_SOURCES source/*.c source/*.cc)
+file(GLOB_RECURSE PROJECT_SOURCES source/*.cc source/*.c)
 file(GLOB_RECURSE PROJECT_CMAKE_UTILS cmake/*.cmake)
 file(GLOB_RECURSE PROJECT_MISC *.md *.txt)
 set (PROJECT_EXPORT_HPP include/${PROJECT_NAME}/export.hpp)

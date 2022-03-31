@@ -1,6 +1,7 @@
 
 #include <string>
 
+#include "HTMLTokenizer.h"
 #include "HTMLDocument.h"
 
 #ifndef _HTMLPARSER_H_
@@ -15,9 +16,13 @@ namespace HTMLParser {
             Parser(std::string p_html);
 
             Document* get_document() { return _document; }
+            void parse();
+            void tokenize() { _tokenizer->tokenize(); }
 
         private:
             Document* _document;
+            Tokenizer* _tokenizer;
+
     };
 }
 
