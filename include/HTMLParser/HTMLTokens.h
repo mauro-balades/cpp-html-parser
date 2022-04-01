@@ -42,7 +42,7 @@ namespace HTMLParser {
             case '/':
                 return TokenType.DASH;
 
-            default:
+            default: // Default should be other such as a character (A-Za-z1-0) wich it should be an identifier.
                 return TokenType.OTHER;
         }
     }
