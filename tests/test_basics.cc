@@ -13,3 +13,4 @@ TEST_F(BasicsTest, TestBackwardsCompat) {
     HTMLParser::Document* document = parser->get_document();
     EXPECT_STREQ(code.c_str(), document->get_html().c_str());
 }
+

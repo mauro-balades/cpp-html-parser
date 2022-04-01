@@ -16,3 +16,4 @@ tests/runUnitTests
 run-tests
 run-examples
 HTMLParserConfig.cmake
+my_file.log

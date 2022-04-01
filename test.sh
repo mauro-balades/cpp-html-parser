@@ -10,7 +10,7 @@ main() {
     cd tests
 
     make
-    make test
+    ctest -V --output-on-failure
 
     cd ..
 }

@@ -4,6 +4,7 @@
 #include "HTMLParser/HTMLTokenizer.h"
 
 #include <iostream>
+#include <string.h>
 
 namespace HTMLParser {
 
@@ -21,13 +22,14 @@ namespace HTMLParser {
 
         for(std::string::size_type i = 0; i < html.size(); ++i) {
 
-            std::string character = std::string(html[i], 1);
+            std::string character(1, html.at(i));
 
             if (character == "\n") {
                 pos.y++;
                 pos.x = 0;
             }
 
+            pos.x++;
         }
 
     }
