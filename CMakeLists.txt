@@ -23,9 +23,9 @@ file(GLOB_RECURSE PROJECT_MISC *.md *.txt)
 set (PROJECT_EXPORT_HPP include/${PROJECT_NAME}/export.hpp)
 set (PROJECT_FILES
   ${PROJECT_HEADERS}
-  ${PROJECT_SOURCES} 
-  ${PROJECT_CMAKE_UTILS} 
-  ${PROJECT_MISC} 
+  ${PROJECT_SOURCES}
+  ${PROJECT_CMAKE_UTILS}
+  ${PROJECT_MISC}
   ${PROJECT_EXPORT_HPP})
 
 include            (assign_source_group)
@@ -72,9 +72,6 @@ generate_export_header(${PROJECT_NAME}
   STATIC_DEFINE        ${PROJECT_NAME_UPPER}_STATIC
 )
 
-##################################################    Examples     ##################################################
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)
-
 ##################################################    Testing     ##################################################
 if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest/CMakeLists.txt)
 
@@ -86,17 +83,17 @@ if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest/CMa
 endif()
 
 ##################################################  Installation  ##################################################
-install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-config
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 install(DIRECTORY include/ DESTINATION include)
-install(EXPORT  ${PROJECT_NAME}-config DESTINATION cmake)
+install(EXPORT  ${PROJECT_NAME}Config DESTINATION cmake)
 
 if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest/CMakeLists.txt)
-  export (TARGETS ${PROJECT_NAME} gtest_main gtest        FILE        ${PROJECT_NAME}-config.cmake)
+  export (TARGETS ${PROJECT_NAME} gtest_main gtest        FILE        ${PROJECT_NAME}Config.cmake)
 else()
 
-  export (TARGETS ${PROJECT_NAME}        FILE        ${PROJECT_NAME}-config.cmake)
+  export (TARGETS ${PROJECT_NAME}        FILE        ${PROJECT_NAME}Config.cmake)
 
 endif()
