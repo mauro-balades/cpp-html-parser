@@ -11,7 +11,7 @@ namespace HTMLParser {
 
         _document->set_html(p_html);
         _tokenizer = new Tokenizer(_document);
-        
+
     }
 
     void Parser::parse() {

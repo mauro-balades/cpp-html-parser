@@ -19,7 +19,6 @@ namespace HTMLParser {
         pos.x = 0;
         pos.y = 0;
 
-
         for(std::string::size_type i = 0; i < html.size(); ++i) {
 
             std::string character = std::string(html[i], 1);
@@ -29,7 +28,6 @@ namespace HTMLParser {
                 pos.x = 0;
             }
 
-            std::cout << (pos.y) << std::endl;
         }
 
     }

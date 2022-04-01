@@ -72,6 +72,9 @@ generate_export_header(${PROJECT_NAME}
   STATIC_DEFINE        ${PROJECT_NAME_UPPER}_STATIC
 )
 
+##################################################    Examples     ##################################################
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)
+
 ##################################################    Testing     ##################################################
 if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest)
 
@@ -79,7 +82,6 @@ if(BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest)
   enable_testing()
   include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
-
 
 endif()
 
@@ -90,4 +92,4 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-config
   RUNTIME DESTINATION bin)
 install(DIRECTORY include/ DESTINATION include)
 install(EXPORT  ${PROJECT_NAME}-config DESTINATION cmake)
-export (TARGETS ${PROJECT_NAME} gtest_main gtest        FILE        ${PROJECT_NAME}-config.cmake)
+export (TARGETS ${PROJECT_NAME} gtest_main gtest run-examples       FILE        ${PROJECT_NAME}-config.cmake)
