@@ -16,6 +16,7 @@ namespace HTMLParser {
         DASH, // a.k.a dividing symbol (/)
 
         IDNT, // Identifier
+        OTHER,
     };
 
     struct TokenPosition {
@@ -29,6 +30,23 @@ namespace HTMLParser {
         TokenType type;
         std::vector<TokenPosition> pos;
     };
+
+    // Methods
+    TokenType get_token_type(std::string character) {
+        switch (character.c_str()) {
+            case '<':
+                return TokenType.OTAG;
+            case '>':
+                return TokenType.CTAG;
+
+            case '/':
+                return TokenType.DASH;
+
+            default:
+                return TokenType.OTHER;
+        }
+    }
+
 }
 
 #endif /* _HTMLPARSER_TOKENS_H_ */
