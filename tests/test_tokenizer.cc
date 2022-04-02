@@ -14,10 +14,17 @@ class TokenizerTest : public ::testing::Test {
 
 TEST_F(TokenizerTest, TestBackwardsCompat) {
     std::string code = "<h1>hello</h1>\n<p>paragraph</p>";
-    
+
+    int fd = open("my_file.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
+    assert(fd >= 0);
+    int ret = dup2(fd, 1);
+    assert(ret >= 0);
+    printf("This is stdout now!\n");
+
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();
 
-    EXPECT_TRUE(1);
+    close(fd);
+    EXPECT_TRUE(true);
 }
 

@@ -20,8 +20,10 @@ namespace HTMLParser {
     };
 
     struct TokenPosition {
-        int y;
-        int x;
+        int y = 0;
+        int x = 0;
+
+        int real_pos = 0;
     };
 
     struct Token {
@@ -32,20 +34,7 @@ namespace HTMLParser {
     };
 
     // Methods
-    TokenType get_token_type(std::string character) {
-        switch (character.c_str()) {
-            case '<':
-                return TokenType.OTAG;
-            case '>':
-                return TokenType.CTAG;
-
-            case '/':
-                return TokenType.DASH;
-
-            default: // Default should be other such as a character (A-Za-z1-0) wich it should be an identifier.
-                return TokenType.OTHER;
-        }
-    }
+    TokenType get_token_type(std::string character);
 
 }
 
