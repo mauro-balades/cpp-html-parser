@@ -30,7 +30,7 @@ namespace HTMLParser {
         std::string content;
 
         TokenType type;
-        std::vector<TokenPosition> pos;
+        TokenPosition * pos;
     };
 
     // Methods

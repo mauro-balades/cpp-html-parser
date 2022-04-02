@@ -19,7 +19,6 @@ TEST_F(TokenizerTest, TestBackwardsCompat) {
     assert(fd >= 0);
     int ret = dup2(fd, 1);
     assert(ret >= 0);
-    printf("This is stdout now!\n");
 
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();

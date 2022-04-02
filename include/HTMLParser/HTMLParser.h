@@ -19,6 +19,8 @@ namespace HTMLParser {
             void parse();
             void tokenize() { _tokenizer->tokenize(); }
 
+            Tokenizer* get_tokenizer() { return _tokenizer; }
+            
         private:
             Document* _document;
             Tokenizer* _tokenizer;

@@ -15,6 +15,7 @@ namespace HTMLParser {
             void tokenize();
             std::string _parse_word();
 
+            std::vector<Token> get_tokens() { return _tokens; }
 
         private:
             Document* _document;

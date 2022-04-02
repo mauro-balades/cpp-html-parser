@@ -20,6 +20,8 @@ namespace HTMLParser {
 
         for(std::string::size_type i = 0; i < html.size(); ++i) {
 
+            if ((pos.real_pos + 1) >= html.size()) break;
+
             std::string character(1, html.at(pos.real_pos));
 
             if (character == "\n") {
@@ -43,15 +45,16 @@ namespace HTMLParser {
                         continue;
                     }
 
+                    type = TokenType::IDNT;
                     character = word;
                 }
             }
 
             Token token = {
-                .content = character;
+                .content = character,
 
-                .type = type;
-                .pos = std::copy(pos);
+                .type = type,
+                .pos = &pos,
             };
 
             _tokens.push_back(token);
@@ -59,7 +62,6 @@ namespace HTMLParser {
             pos.x++;
             pos.real_pos++;
         }
-
     }
 
     std::string Tokenizer::_parse_word() {
@@ -73,7 +75,7 @@ namespace HTMLParser {
 
             word.append(character);
 
-            if (!((i + 1) >= html.length())) {
+            if ((i + 1) < html.length()) {
 
                 i++;
                 pos.x++;
