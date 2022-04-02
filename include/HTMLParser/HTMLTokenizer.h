@@ -19,6 +19,7 @@ namespace HTMLParser {
         private:
             Document* _document;
             std::vector<Token> _tokens;
+
             TokenPosition pos;
     };
 }

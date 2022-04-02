@@ -42,8 +42,19 @@ namespace HTMLParser {
 
                         continue;
                     }
+
+                    character = word;
                 }
             }
+
+            Token token = {
+                .content = character;
+
+                .type = type;
+                .pos = std::copy(pos);
+            };
+
+            _tokens.push_back(token);
 
             pos.x++;
             pos.real_pos++;
