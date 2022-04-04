@@ -23,10 +23,10 @@ namespace HTMLParser {
         tokenize();
 
         std::vector<Token> tokens = _tokenizer->get_tokens();
-        for(std::vector<T>::size_type i = 0; i != tokens.size(); i++) {
+        for(std::vector<Token>::size_type i = 0; i != tokens.size(); i++) {
             Token current_token = tokens[i];
 
-            switch (token.type) {
+            switch (current_token.type) {
 
                 case TokenType::OTAG: {
 
