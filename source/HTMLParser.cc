@@ -3,6 +3,8 @@
 #include "HTMLParser/HTMLDOM.h"
 #include "HTMLParser/HTMLTokenizer.h"
 
+#include "HTMLParser/HTMLElement.h"
+
 #define GET_NEXT_TOKEN()             \
     i++;                             \
     Token current_token = tokens[i]; \
@@ -30,10 +32,19 @@ namespace HTMLParser {
 
                 case TokenType::OTAG: {
 
-                    GET_NEXT_TOKEN();
-                    if (current_token.type == TokenType::IDNT) {
-                        
-                    }
+                    // HTMLElement* element = new HTMLElement();
+
+                    // GET_NEXT_TOKEN();
+                    // if (current_token.type == TokenType::IDNT) {
+                    //     element->set_tagname(current_token.content);
+                    // }
+
+                    // printf("NAME: %s", element->get_tagname().c_str());
+
+
+                    // _dom->add_element(element);
+
+                    // delete element;
                 };
             }
         }

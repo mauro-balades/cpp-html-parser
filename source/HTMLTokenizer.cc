@@ -18,9 +18,9 @@ namespace HTMLParser {
     void Tokenizer::tokenize() {
         std::string html = _dom->get_html();
 
-        for(std::string::size_type i = 0; i < html.size(); ++i) {
+        for(std::string::size_type i = 0; i < html.size() + 1; ++i) {
 
-            if ((pos.real_pos + 1) >= html.size()) break;
+            if ((pos.real_pos + 1) >= (html.size() + 1)) break;
 
             std::string character(1, html.at(pos.real_pos));
 
@@ -37,13 +37,6 @@ namespace HTMLParser {
             if (type == TokenType::OTHER) {
                 if (IS_WORD(character.c_str())) {
                     std::string word = _parse_word();
-
-                    if (word == "") {
-                        pos.x++;
-                        pos.real_pos++;
-
-                        continue;
-                    }
 
                     type = TokenType::IDNT;
                     character = word;
@@ -65,7 +58,7 @@ namespace HTMLParser {
     }
 
     std::string Tokenizer::_parse_word() {
-        std::string html = _dom->get_html().substr(pos.real_pos-1);
+        std::string html = _dom->get_html().substr(pos.real_pos);
         std::string word = "";
 
         int i = 0;
@@ -89,6 +82,8 @@ namespace HTMLParser {
         }
 
         pos.x--; // We increment it at the end of Tokenizer::tokenize()
+        pos.real_pos--;
+
         return word;
     }
 }

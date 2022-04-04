@@ -10,7 +10,7 @@ namespace HTMLParser {
             HTMLElement() {}
 
             void set_tagname(std::string p_html) { _tag_name = _tag_name; }
-            std::string get_tag_name() { return _tag_name; }
+            std::string get_tagname() { return _tag_name; }
 
         private:
             std::string _tag_name;
