@@ -1,13 +1,13 @@
 
 #include <string>
 
-#ifndef _HTMLPARSER_DOCUMENT_H_
-#define _HTMLPARSER_DOCUMENT_H_
+#ifndef _HTMLPARSER_DOM_H_
+#define _HTMLPARSER_DOM_H_
 
 namespace HTMLParser {
-    class Document {
+    class DOM {
         public:
-            Document() {}
+            DOM() {}
 
             void set_html(std::string p_html) { _html = p_html; }
             std::string get_html() { return _html; }
@@ -17,4 +17,4 @@ namespace HTMLParser {
     };
 }
 
-#endif /* _HTMLPARSER_DOCUMENT_H_ */
+#endif /* _HTMLPARSER_DOM_H_ */

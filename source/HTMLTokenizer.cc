@@ -1,6 +1,6 @@
 
 #include "HTMLParser/HTMLTokens.h"
-#include "HTMLParser/HTMLDocument.h"
+#include "HTMLParser/HTMLDOM.h"
 #include "HTMLParser/HTMLTokenizer.h"
 
 #include <iostream>
@@ -11,12 +11,12 @@
 
 namespace HTMLParser {
 
-    Tokenizer::Tokenizer(Document* p_document) {
-        _document = p_document;
+    Tokenizer::Tokenizer(DOM* p_dom) {
+        _dom = p_dom;
     }
 
     void Tokenizer::tokenize() {
-        std::string html = _document->get_html();
+        std::string html = _dom->get_html();
 
         for(std::string::size_type i = 0; i < html.size(); ++i) {
 
@@ -65,7 +65,7 @@ namespace HTMLParser {
     }
 
     std::string Tokenizer::_parse_word() {
-        std::string html = _document->get_html().substr(pos.real_pos-1);
+        std::string html = _dom->get_html().substr(pos.real_pos-1);
         std::string word = "";
 
         int i = 0;

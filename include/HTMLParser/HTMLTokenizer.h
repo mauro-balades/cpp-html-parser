@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "HTMLTokens.h"
-#include "HTMLDocument.h"
+#include "HTMLDOM.h"
 
 #ifndef _HTMLPARSER_TOKENIZER_H_
 #define _HTMLPARSER_TOKENIZER_H_
@@ -11,14 +11,14 @@ namespace HTMLParser {
     class Tokenizer {
 
         public:
-            Tokenizer(Document* p_document);
+            Tokenizer(DOM* p_dom);
             void tokenize();
             std::string _parse_word();
 
             std::vector<Token> get_tokens() { return _tokens; }
 
         private:
-            Document* _document;
+            DOM* _dom;
             std::vector<Token> _tokens;
 
             TokenPosition pos;

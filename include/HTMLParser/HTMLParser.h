@@ -2,7 +2,7 @@
 #include <string>
 
 #include "HTMLTokenizer.h"
-#include "HTMLDocument.h"
+#include "HTMLDOM.h"
 
 #ifndef _HTMLPARSER_H_
 #define _HTMLPARSER_H_
@@ -15,14 +15,14 @@ namespace HTMLParser {
             // TODO: add suport for "const char*" and add destructor
             Parser(std::string p_html);
 
-            Document* get_document() { return _document; }
+            DOM* get_dom() { return _dom; }
             void parse();
             void tokenize() { _tokenizer->tokenize(); }
 
             Tokenizer* get_tokenizer() { return _tokenizer; }
             
         private:
-            Document* _document;
+            DOM* _dom;
             Tokenizer* _tokenizer;
 
     };

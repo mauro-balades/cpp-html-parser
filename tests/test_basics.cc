@@ -10,7 +10,7 @@ TEST_F(BasicsTest, TestBackwardsCompat) {
 
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
 
-    HTMLParser::Document* document = parser->get_document();
-    EXPECT_STREQ(code.c_str(), document->get_html().c_str());
+    HTMLParser::DOM* dom = parser->get_dom();
+    EXPECT_STREQ(code.c_str(), dom->get_html().c_str());
 }
 

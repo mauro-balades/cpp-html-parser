@@ -1,6 +1,6 @@
 
 #include "HTMLParser/HTMLParser.h"
-#include "HTMLParser/HTMLDocument.h"
+#include "HTMLParser/HTMLDOM.h"
 #include "HTMLParser/HTMLTokenizer.h"
 
 #define GET_NEXT_TOKEN()             \
@@ -12,10 +12,10 @@ namespace HTMLParser {
     class Tokenizer;
 
     Parser::Parser(std::string p_html) {
-        _document = new Document();
+        _dom = new DOM();
 
-        _document->set_html(p_html);
-        _tokenizer = new Tokenizer(_document);
+        _dom->set_html(p_html);
+        _tokenizer = new Tokenizer(_dom);
 
     }
 
