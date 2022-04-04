@@ -31,12 +31,8 @@ namespace HTMLParser {
                 case TokenType::OTAG: {
 
                     GET_NEXT_TOKEN();
-                    if (current_token.type == TokenType::IDNT) { // <idnt>
-
-                    } else if (current_token.type == TokenType::CTAG) { // <>
-
-                    } else { // ??
-                        // TODO: throw any error?
+                    if (current_token.type == TokenType::IDNT) {
+                        
                     }
                 };
             }
