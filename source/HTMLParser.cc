@@ -9,6 +9,9 @@
     i++;                             \
     Token current_token = tokens[i]; \
 
+#define GET_PEEk() \
+    Token peek = tokens[i + 1];
+
 
 namespace HTMLParser {
     class Tokenizer;
@@ -27,6 +30,7 @@ namespace HTMLParser {
         std::vector<Token> tokens = _tokenizer->get_tokens();
         for(std::vector<Token>::size_type i = 0; i != tokens.size(); i++) {
             Token current_token = tokens[i];
+            Token peek;
 
             switch (current_token.type) {
 
@@ -39,11 +43,7 @@ namespace HTMLParser {
                         element->set_tagname(current_token.content);
                     }
 
-                    printf("NAME: %s", element->get_tagname().c_str());
-
-
                     _dom->add_element(element);
-
                     delete element;
                 };
             }
