@@ -32,19 +32,19 @@ namespace HTMLParser {
 
                 case TokenType::OTAG: {
 
-                    // HTMLElement* element = new HTMLElement();
+                    HTMLElement* element = new HTMLElement();
 
-                    // GET_NEXT_TOKEN();
-                    // if (current_token.type == TokenType::IDNT) {
-                    //     element->set_tagname(current_token.content);
-                    // }
+                    GET_NEXT_TOKEN();
+                    if (current_token.type == TokenType::IDNT) {
+                        element->set_tagname(current_token.content);
+                    }
 
-                    // printf("NAME: %s", element->get_tagname().c_str());
+                    printf("NAME: %s", element->get_tagname().c_str());
 
 
-                    // _dom->add_element(element);
+                    _dom->add_element(element);
 
-                    // delete element;
+                    delete element;
                 };
             }
         }

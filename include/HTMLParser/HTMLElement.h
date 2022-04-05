@@ -1,4 +1,5 @@
 
+#include <map>
 #include <string>
 
 #ifndef _HTMLPARSER_ELEMENT_H_
@@ -9,11 +10,15 @@ namespace HTMLParser {
         public:
             HTMLElement() {}
 
-            void set_tagname(std::string p_html) { _tag_name = _tag_name; }
+            void set_tagname(std::string p_tagname) { _tag_name = p_tagname; }
             std::string get_tagname() { return _tag_name; }
+
+            void set_attrs(std::map<std::string, std::string> p_attrs) { _attrs = p_attrs; }
+            std::map<std::string, std::string> get_attrs() { return _attrs; }
 
         private:
             std::string _tag_name;
+            std::map<std::string, std::string> _attrs;
     };
 }
 
