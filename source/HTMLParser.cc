@@ -41,6 +41,9 @@ namespace HTMLParser {
                     }
 
                     element->set_attrs(_parse_attrs());
+
+                    for (int )
+
                     _dom->add_element(element);
                     delete element;
                 };

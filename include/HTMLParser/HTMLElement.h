@@ -16,7 +16,11 @@ namespace HTMLParser {
             void set_attrs(std::map<std::string, std::string> p_attrs) { _attrs = p_attrs; }
             std::map<std::string, std::string> get_attrs() { return _attrs; }
 
+            void set_type(std::string p_type) { _type = p_type; }
+            std::string type() { return _type; }
+
         private:
+            std::string _type;
             std::string _tag_name;
             std::map<std::string, std::string> _attrs;
     };
