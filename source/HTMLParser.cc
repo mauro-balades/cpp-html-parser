@@ -7,7 +7,7 @@
 
 #define GET_NEXT_TOKEN()                \
     pos++;                              \
-    Token current_token = _tokens[pos]; \
+    current_token = _tokens[pos]; \
 
 
 
@@ -20,12 +20,12 @@ namespace HTMLParser {
         _dom->set_html(p_html);
         _tokenizer = new Tokenizer(_dom);
 
-        std::vector<Token> _tokens = _tokenizer->get_tokens();
     }
 
     void Parser::parse() {
         tokenize();
 
+        printf("TOK LEN: %li\n", _tokens.size());
         while(pos != _tokens.size()) {
             Token current_token = _tokens[pos];
 
@@ -41,7 +41,6 @@ namespace HTMLParser {
                     }
 
                     element->set_attrs(_parse_attrs());
-
                     _dom->add_element(element);
                     delete element;
                 };
@@ -62,6 +61,7 @@ namespace HTMLParser {
 
         while (peek().content != ">") {
             GET_NEXT_TOKEN();
+            printf("CUR: %s\n", current_token.content.c_str());
 
             if (current_token.type == TokenType::IDNT) {
                 std::string current_attr = current_token.content;
@@ -72,9 +72,10 @@ namespace HTMLParser {
 
                     do {
                         GET_NEXT_TOKEN();
-                        attr_content << current_token.content;
-                    } while (peek().content != "\"")
+                        attr_content += current_token.content;
+                    } while (peek().content != "\"");
 
+                    GET_NEXT_TOKEN();
                     attr_content = current_token.content;
                 }
 

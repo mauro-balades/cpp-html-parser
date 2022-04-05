@@ -1,5 +1,6 @@
 # Source files
 set (SOURCE
+    test_attrs.cc
     test_basics.cc
     test_tokenizer.cc
 )

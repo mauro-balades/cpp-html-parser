@@ -17,3 +17,4 @@ run-tests
 run-examples
 HTMLParserConfig.cmake
 my_file.log
+my_file_attrs.log
