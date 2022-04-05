@@ -19,7 +19,11 @@ namespace HTMLParser {
             void set_type(std::string p_type) { _type = p_type; }
             std::string type() { return _type; }
 
+            void set_raw_text(std::string p_raw) { _raw = p_raw; }
+            std::string raw_text() { return _raw; }
+
         private:
+            std::string _raw;
             std::string _type;
             std::string _tag_name;
             std::map<std::string, std::string> _attrs;

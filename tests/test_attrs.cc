@@ -25,6 +25,7 @@ TEST_F(AttributesTest, TestBackwardsCompat) {
     parser->parse();
 
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
+    printf("ELEM: %i", elements.size());
     for (int i = 0; i < elements.size(); i++) {
         for(const auto& [k, v] : elements.at(i)->get_attrs())
         {

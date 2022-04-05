@@ -43,8 +43,6 @@ namespace HTMLParser {
                 }
             }
 
-
-
             if (character != " ") { // ignore white spaces
                 // printf("HTML LEN: %s\n", character.c_str());
                 Token token = {
@@ -60,6 +58,15 @@ namespace HTMLParser {
             pos.x++;
             pos.real_pos++;
         }
+
+        Token token = {
+            .content = "",
+
+            .type = TokenType::_EOF,
+            .pos = &pos,
+        };
+
+        _tokens.push_back(token);
     }
 
     std::string Tokenizer::_parse_word() {

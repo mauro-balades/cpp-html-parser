@@ -41,11 +41,37 @@ namespace HTMLParser {
                     }
 
                     element->set_attrs(_parse_attrs());
-
-                    for (int )
+                    element->set_type("element");
 
                     _dom->add_element(element);
                     delete element;
+                };
+
+                case TokenType::_EOF:
+                    break;
+
+                default: {
+                    Token current_token;
+                    std::string text = "";
+
+                    while (peek().content != ">") {
+                        GET_NEXT_TOKEN();
+
+                        if (current_token.type == TokenType::_EOF) break;
+
+                        text += current_token.content;
+                    }
+
+
+                    if (text != "") {
+                        HTMLElement* element = new HTMLElement();
+                        element->set_type("text");
+
+                        element->set_raw_text(text);
+
+                        _dom->add_element(element);
+                        delete element;
+                    }
                 };
             }
 
@@ -64,7 +90,6 @@ namespace HTMLParser {
 
         while (peek().content != ">") {
             GET_NEXT_TOKEN();
-            printf("CUR: %s\n", current_token.content.c_str());
 
             if (current_token.type == TokenType::IDNT) {
                 std::string current_attr = current_token.content;
