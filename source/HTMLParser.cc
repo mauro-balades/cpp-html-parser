@@ -5,12 +5,10 @@
 
 #include "HTMLParser/HTMLElement.h"
 
-#define GET_NEXT_TOKEN()             \
-    i++;                             \
-    Token current_token = tokens[i]; \
+#define GET_NEXT_TOKEN()                \
+    pos++;                              \
+    Token current_token = _tokens[pos]; \
 
-#define GET_PEEk() \
-    Token peek = tokens[i + 1];
 
 
 namespace HTMLParser {
@@ -22,15 +20,14 @@ namespace HTMLParser {
         _dom->set_html(p_html);
         _tokenizer = new Tokenizer(_dom);
 
+        std::vector<Token> _tokens = _tokenizer->get_tokens();
     }
 
     void Parser::parse() {
         tokenize();
 
-        std::vector<Token> tokens = _tokenizer->get_tokens();
-        for(std::vector<Token>::size_type i = 0; i != tokens.size(); i++) {
-            Token current_token = tokens[i];
-            Token peek;
+        while(pos != _tokens.size()) {
+            Token current_token = _tokens[pos];
 
             switch (current_token.type) {
 
@@ -43,10 +40,48 @@ namespace HTMLParser {
                         element->set_tagname(current_token.content);
                     }
 
+                    element->set_attrs(_parse_attrs());
+
                     _dom->add_element(element);
                     delete element;
                 };
             }
+
+            pos++;
         }
+    }
+
+    Token Parser::peek() {
+        // TODO: check if EOF
+        return _tokens[pos + 1];
+    }
+
+    std::map<std::string, std::string> Parser::_parse_attrs() {
+        std::map<std::string, std::string> attrs;
+        Token current_token;
+
+        while (peek().content != ">") {
+            GET_NEXT_TOKEN();
+
+            if (current_token.type == TokenType::IDNT) {
+                std::string current_attr = current_token.content;
+                std::string attr_content = "";
+
+                if (peek().content == "=") {
+                    GET_NEXT_TOKEN();
+
+                    do {
+                        GET_NEXT_TOKEN();
+                        attr_content << current_token.content;
+                    } while (peek().content != "\"")
+
+                    attr_content = current_token.content;
+                }
+
+                attrs[current_attr] = attr_content;
+            }
+        }
+
+        return attrs;
     }
 }

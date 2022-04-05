@@ -17,14 +17,19 @@ namespace HTMLParser {
 
             DOM* get_dom() { return _dom; }
             void parse();
+
             void tokenize() { _tokenizer->tokenize(); }
 
             Tokenizer* get_tokenizer() { return _tokenizer; }
-            
+
         private:
             DOM* _dom;
             Tokenizer* _tokenizer;
+            std::vector<Token>::size_type pos = 0;
+            std::vector<Token> _tokens;
 
+            std::map<std::string, std::string> _parse_attrs();
+            Token peek();
     };
 }
 
