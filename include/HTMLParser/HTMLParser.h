@@ -1,8 +1,10 @@
 
+#include <map>
 #include <string>
 
 #include "HTMLTokenizer.h"
 #include "HTMLDOM.h"
+#include "HTMLElement.h"
 
 #ifndef _HTMLPARSER_H_
 #define _HTMLPARSER_H_
@@ -24,6 +26,10 @@ namespace HTMLParser {
             }
 
             Tokenizer* get_tokenizer() { return _tokenizer; }
+
+            template <typename T>
+            void parse_elements(T* p_parent);
+
             DOM* dom() { return _dom; }
 
         private:

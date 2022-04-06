@@ -5,11 +5,11 @@
 
 #include "HTMLParser/HTMLElement.h"
 
+#include <string>
+
 #define GET_NEXT_TOKEN()                \
     pos++;                              \
     current_token = _tokens[pos]; \
-
-
 
 namespace HTMLParser {
     class Tokenizer;
@@ -24,9 +24,12 @@ namespace HTMLParser {
 
     void Parser::parse() {
         tokenize();
+        parse_elements(_dom);
+    }
 
-        printf("TOK LEN: %li\n", _tokens.size());
-        while(pos != _tokens.size()) {
+    template <typename T>
+    void Parser::parse_elements(T* p_parent) {
+        while (pos != _tokens.size()) {
             Token current_token = _tokens[pos];
 
             switch (current_token.type) {
@@ -38,12 +41,19 @@ namespace HTMLParser {
                     GET_NEXT_TOKEN();
                     if (current_token.type == TokenType::IDNT) {
                         element->set_tagname(current_token.content);
+                    } else if (current_token.type == TokenType::CTAG) {
+                        delete element;
+                        return;
                     }
 
                     element->set_attrs(_parse_attrs());
                     element->set_type("element");
+                    GET_NEXT_TOKEN(); // TODO: check if next token is a <
 
-                    _dom->add_element(element);
+
+                    parse_elements(element);
+
+                    p_parent->add_element(element);
                     delete element;
                 };
 
@@ -51,27 +61,35 @@ namespace HTMLParser {
                     break;
 
                 default: {
+                    if (current_token.type == TokenType::_EOF) {
+                        return; // TODO: do something
+                    }
+
                     Token current_token;
                     std::string text = "";
 
-                    while (peek().content != ">") {
+
+                    while (peek().type != TokenType::CTAG) {
                         GET_NEXT_TOKEN();
 
                         if (current_token.type == TokenType::_EOF) break;
 
                         text += current_token.content;
+
                     }
 
 
                     if (text != "") {
+
                         HTMLElement* element = new HTMLElement();
                         element->set_type("text");
 
                         element->set_raw_text(text);
 
-                        _dom->add_element(element);
+                        p_parent->add_element(element);
                         delete element;
                     }
+
                 };
             }
 

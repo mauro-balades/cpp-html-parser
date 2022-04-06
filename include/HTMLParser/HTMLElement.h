@@ -6,6 +6,7 @@
 #define _HTMLPARSER_ELEMENT_H_
 
 namespace HTMLParser {
+
     class HTMLElement {
         public:
             HTMLElement() {}
@@ -22,11 +23,18 @@ namespace HTMLParser {
             void set_raw_text(std::string p_raw) { _raw = p_raw; }
             std::string raw_text() { return _raw; }
 
+            // Functions stolen from HTMLDOM to avoid #include infinite iteration
+            void add_element(HTMLElement* p_element) { _elements.push_back(p_element); }
+            std::vector<HTMLElement*> get_elements() { return _elements; }
+
+
         private:
             std::string _raw;
             std::string _type;
             std::string _tag_name;
+            std::vector<HTMLElement*> _elements;
             std::map<std::string, std::string> _attrs;
+
     };
 }
 

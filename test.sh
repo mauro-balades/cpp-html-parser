@@ -11,7 +11,7 @@ main() {
     cd tests
 
     make
-    ctest -V --output-on-failure
+    ctest -VV --output-on-failure
 
     cd ..
 }
