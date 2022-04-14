@@ -7,7 +7,7 @@
 #include <string.h>
 #include <regex>
 
-#define IS_WORD(x) (std::regex_match(x, std::regex("^[^<>/\\s\\\"\\'=]+$")))
+#define IS_WORD(x) (std::regex_match(x, std::regex("^[^<>/\\s\\\"\\'=-]+$")))
 
 namespace HTMLParser {
 
