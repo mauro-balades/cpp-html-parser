@@ -16,7 +16,6 @@ namespace HTMLParser {
         DASH, // a.k.a dividing symbol (/)
 
         IDNT, // Identifier
-        OTHER,
     };
 
     struct TokenPosition {

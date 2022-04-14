@@ -7,9 +7,17 @@
 
 #include <string>
 
-#define GET_NEXT_TOKEN()                \
-    pos++;                              \
-    current_token = _tokens[pos]; \
+#define GET_NEXT_TOKEN()                             \
+    if (!((pos + 1) >= _tokens.size())) {            \
+        pos++;                                       \
+        current_token = _tokens[pos];                \
+    } else {                                         \
+        current_token = _tokens[_tokens.size() - 1]; \
+    }
+
+#define IF_TOKEN(tk) if (token.type == tk) {
+
+#define END_TOKEN() }
 
 namespace HTMLParser {
     class Tokenizer;
@@ -29,106 +37,11 @@ namespace HTMLParser {
 
     template <typename T>
     void Parser::parse_elements(T* p_parent) {
-        while (pos != _tokens.size()) {
-            Token current_token = _tokens[pos];
 
-            switch (current_token.type) {
+        std::vector<Token> tokens = _tokenizer->get_tokens();
 
-                case TokenType::OTAG: {
-
-                    HTMLElement* element = new HTMLElement();
-
-                    GET_NEXT_TOKEN();
-                    if (current_token.type == TokenType::IDNT) {
-                        element->set_tagname(current_token.content);
-                    } else if (current_token.type == TokenType::CTAG) {
-                        delete element;
-                        return;
-                    }
-
-                    element->set_attrs(_parse_attrs());
-                    element->set_type("element");
-                    GET_NEXT_TOKEN(); // TODO: check if next token is a <
-
-
-                    parse_elements(element);
-
-                    p_parent->add_element(element);
-                    delete element;
-                };
-
-                case TokenType::_EOF:
-                    break;
-
-                default: {
-                    if (current_token.type == TokenType::_EOF) {
-                        return; // TODO: do something
-                    }
-
-                    Token current_token;
-                    std::string text = "";
-
-
-                    while (peek().type != TokenType::CTAG) {
-                        GET_NEXT_TOKEN();
-
-                        if (current_token.type == TokenType::_EOF) break;
-
-                        text += current_token.content;
-
-                    }
-
-
-                    if (text != "") {
-
-                        HTMLElement* element = new HTMLElement();
-                        element->set_type("text");
-
-                        element->set_raw_text(text);
-
-                        p_parent->add_element(element);
-                        delete element;
-                    }
-
-                };
-            }
-
-            pos++;
+        for(std::vector<Token>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
+            printf("TOK: %s\n", token->content.c_str());
         }
-    }
-
-    Token Parser::peek() {
-        // TODO: check if EOF
-        return _tokens[pos + 1];
-    }
-
-    std::map<std::string, std::string> Parser::_parse_attrs() {
-        std::map<std::string, std::string> attrs;
-        Token current_token;
-
-        while (peek().content != ">") {
-            GET_NEXT_TOKEN();
-
-            if (current_token.type == TokenType::IDNT) {
-                std::string current_attr = current_token.content;
-                std::string attr_content = "";
-
-                if (peek().content == "=") {
-                    GET_NEXT_TOKEN();
-
-                    do {
-                        GET_NEXT_TOKEN();
-                        attr_content += current_token.content;
-                    } while (peek().content != "\"");
-
-                    GET_NEXT_TOKEN();
-                    attr_content = current_token.content;
-                }
-
-                attrs[current_attr] = attr_content;
-            }
-        }
-
-        return attrs;
     }
 }

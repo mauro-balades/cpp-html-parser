@@ -7,7 +7,7 @@
 #include <string.h>
 #include <regex>
 
-#define IS_WORD(x) (std::regex_match(x, std::regex("^[A-Za-z0-9_.]+$")))
+#define IS_WORD(x) (std::regex_match(x, std::regex("^[^<>/\\s]+$")))
 
 namespace HTMLParser {
 
@@ -34,7 +34,7 @@ namespace HTMLParser {
 
             TokenType type = get_token_type(character);
 
-            if (type == TokenType::OTHER) {
+            if (type == TokenType::IDNT) {
                 if (IS_WORD(character.c_str())) {
                     std::string word = _parse_word();
 
@@ -60,7 +60,7 @@ namespace HTMLParser {
         }
 
         Token token = {
-            .content = "",
+            .content = std::string(""),
 
             .type = TokenType::_EOF,
             .pos = &pos,
