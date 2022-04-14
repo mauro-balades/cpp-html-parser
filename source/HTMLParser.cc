@@ -20,6 +20,9 @@
 #define LOOP_TOKENS() for(std::vector<Token>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
 #define NEW_ELEMENT() HTMLElement* element = new HTMLElement();
 
+#define NEW_ATTRS() std::map<std::string, std::string> element_attrs;
+#define ADD_ATTR(x, y)  element_attrs.insert(std::pair<std::string, std::string>(x, y));
+
 namespace HTMLParser {
     class Tokenizer;
 
@@ -53,6 +56,7 @@ namespace HTMLParser {
 
                 // Parse HTML element's attributes
 
+                NEW_ATTRS()
                 while (true) {
                     END_IF_EOF()
 
@@ -60,11 +64,34 @@ namespace HTMLParser {
                     IF_TOKEN(TokenType::CTAG)
                         break;
                     END_BLOCK()
+                    IF_TOKEN(TokenType::IDNT)
+                        std::string attr_name = token->content;
+                        std::string attr_val  = "";
 
-                    
+                        GET_NEXT_TOKEN()
+                        IF_TOKEN(TokenType::EQU)
+
+                            GET_NEXT_TOKEN()
+                            IF_TOKEN(TokenType::QUOT)
+                                while (true) {
+                                    END_IF_EOF()
+
+                                    IF_TOKEN(TokenType::QUOT)
+                                        break;
+                                    END_BLOCK()
+
+                                    attr_val += token->content;
+                                }
+                            END_BLOCK()
+                        END_BLOCK()
+
+                        ADD_ATTR(attr_name, attr_val)
+                    END_BLOCK()
                 }
 
                 // ~Parse HTML element's attributes
+                printf("NEXT TOK: %s\n", token->content.c_str());
+                // IF_TOKEN()
 
                 p_parent->add_element(element);
                 delete element;
