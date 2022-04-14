@@ -13,7 +13,7 @@ class TokenizerTest : public ::testing::Test {
 };
 
 TEST_F(TokenizerTest, TestBackwardsCompat) {
-    std::string code = "<h1>hello</h1>\n<p>paragraph</p>";
+    std::string code = "<h1>hello</h1><p>paragraph</p>";
 
     int fd = open("my_file.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
     assert(fd >= 0);

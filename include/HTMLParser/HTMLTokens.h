@@ -14,6 +14,8 @@ namespace HTMLParser {
         CTAG, // Closing tag (>)
 
         DASH, // a.k.a dividing symbol (/)
+        QUOT, // A quoting sign (", ')
+        EQU,  // Equal sign (=)
 
         IDNT, // Identifier
     };

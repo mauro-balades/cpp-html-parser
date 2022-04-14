@@ -15,7 +15,7 @@
         current_token = _tokens[_tokens.size() - 1]; \
     }
 
-#define IF_TOKEN(tk) if (token.type == tk) {
+#define IF_TOKEN(tk) if (token->type == tk) {
 
 #define END_TOKEN() }
 
@@ -42,6 +42,9 @@ namespace HTMLParser {
 
         for(std::vector<Token>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
             printf("TOK: %s\n", token->content.c_str());
+            IF_TOKEN(TokenType::OTAG)
+                printf("HELLO\n");
+            END_TOKEN()
         }
     }
 }
