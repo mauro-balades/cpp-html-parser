@@ -90,8 +90,9 @@ namespace HTMLParser {
                 }
 
                 // ~Parse HTML element's attributes
-                printf("NEXT TOK: %s\n", token->content.c_str());
-                // IF_TOKEN()
+                IF_TOKEN(TokenType::CTAG)
+                    GET_NEXT_TOKEN()
+                END_BLOCK()
 
                 p_parent->add_element(element);
                 delete element;
