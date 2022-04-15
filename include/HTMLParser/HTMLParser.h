@@ -22,13 +22,12 @@ namespace HTMLParser {
 
             void tokenize() {
                 _tokenizer->tokenize();
-                _tokens = _tokenizer->get_tokens();
             }
 
             Tokenizer* get_tokenizer() { return _tokenizer; }
 
             template <typename T>
-            void parse_elements(T* p_parent);
+            void parse_elements(T* p_parent, std::vector<Token> tokens);
 
             DOM* dom() { return _dom; }
 
@@ -37,10 +36,11 @@ namespace HTMLParser {
             Tokenizer* _tokenizer;
 
             int pos = 0;
-            std::vector<Token> _tokens;
 
             std::map<std::string, std::string> _parse_attrs();
             Token peek();
+
+            std::vector<HTMLParser::Token>::iterator _current_token;
     };
 }
 

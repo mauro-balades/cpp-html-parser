@@ -6,8 +6,9 @@
 #include "HTMLParser/HTMLElement.h"
 
 #include <string>
+#include <typeinfo>
 
-#define GET_NEXT_TOKEN() token++;
+#define GET_NEXT_TOKEN() _current_token++;
 #define IGNORE_WHITE_SPACES()       \
     while (true) {                  \
         END_IF_EOF()                \
@@ -21,12 +22,12 @@
     }
 
 
-#define IF_TOKEN(tk) if (token->type == tk) {
+#define IF_TOKEN(tk) if (_current_token->type == tk) {
 #define END_BLOCK() }
 
 #define END_IF_EOF()            \
     IF_TOKEN(TokenType::_EOF)   \
-        break;                  \
+        return;                 \
     END_BLOCK()                 \
 
 #define LOOP_TOKENS() for(std::vector<Token>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
@@ -48,100 +49,113 @@ namespace HTMLParser {
 
     void Parser::parse() {
         tokenize();
-        parse_elements(_dom);
-    }
-
-    template <typename T>
-    void Parser::parse_elements(T* p_parent) {
 
         std::vector<Token> tokens = _tokenizer->get_tokens();
         LOOP_TOKENS()
+            if (token - tokens.begin() == 0)
+                _current_token = token;
 
-            // Check if the character is an opening tag
-            IF_TOKEN(TokenType::OTAG)
+            token = _current_token;
+            parse_elements(_dom, tokens);
+        END_BLOCK()
+    }
 
-                // Create a new instance of the element and go to the next token (ignoring white spaces)
-                NEW_ELEMENT()
+    template <typename T>
+    void Parser::parse_elements(T* p_parent, std::vector<Token> tokens) {
+
+        // Check if the character is an opening tag
+        IF_TOKEN(TokenType::OTAG)
+
+            // Create a new instance of the element and go to the next token (ignoring white spaces)
+            NEW_ELEMENT()
+            IGNORE_WHITE_SPACES()
+
+            // We check if the current token is of type TokenType::_EOF.
+            // If it is, we just break the loop since it means that we
+            // go to the end of the document.
+            END_IF_EOF()
+
+            IF_TOKEN(TokenType::IDNT)
+                element->set_tagname(_current_token->content);
+            END_BLOCK()
+
+            // Parse HTML element's attributes
+
+            NEW_ATTRS()
+            while (true) {
+                END_IF_EOF()
                 IGNORE_WHITE_SPACES()
 
-                // We check if the current token is of type TokenType::_EOF.
-                // If it is, we just break the loop since it means that we
-                // go to the end of the document.
-                END_IF_EOF()
-
-                IF_TOKEN(TokenType::IDNT)
-                    element->set_tagname(token->content);
+                IF_TOKEN(TokenType::CTAG)
+                    break;
                 END_BLOCK()
+                IF_TOKEN(TokenType::IDNT)
+                    std::string attr_name = _current_token->content;
+                    std::string attr_val  = "";
 
-                // Parse HTML element's attributes
-
-                NEW_ATTRS()
-                while (true) {
-                    END_IF_EOF()
                     IGNORE_WHITE_SPACES()
-
-                    IF_TOKEN(TokenType::CTAG)
-                        break;
-                    END_BLOCK()
-                    IF_TOKEN(TokenType::IDNT)
-                        std::string attr_name = token->content;
-                        std::string attr_val  = "";
+                    IF_TOKEN(TokenType::EQU)
 
                         IGNORE_WHITE_SPACES()
-                        IF_TOKEN(TokenType::EQU)
+                        IF_TOKEN(TokenType::QUOT)
+                            while (true) {
+                                END_IF_EOF()
 
-                            IGNORE_WHITE_SPACES()
-                            IF_TOKEN(TokenType::QUOT)
-                                while (true) {
-                                    END_IF_EOF()
-
-                                    GET_NEXT_TOKEN()
-                                    IF_TOKEN(TokenType::QUOT)
-                                        break;
-                                    END_BLOCK()
+                                GET_NEXT_TOKEN()
+                                IF_TOKEN(TokenType::QUOT)
+                                    break;
+                                END_BLOCK()
 
 
-                                    attr_val += token->content;
-                                }
-                            END_BLOCK()
-
-                            ADD_ATTR(attr_name, attr_val)
+                                attr_val += _current_token->content;
+                            }
                         END_BLOCK()
+
+                        ADD_ATTR(attr_name, attr_val)
                     END_BLOCK()
-
-                }
-
-                element->set_attrs(element_attrs);
-
-                // ~Parse HTML element's attributes
-                IF_TOKEN(TokenType::CTAG)
-                    GET_NEXT_TOKEN()
                 END_BLOCK()
 
-                p_parent->add_element(element);
+            }
 
+            // ~Parse HTML element's attributes
+            IF_TOKEN(TokenType::CTAG)
+                GET_NEXT_TOKEN()
             END_BLOCK()
-            IF_TOKEN(TokenType::IDNT)
-                NEW_ELEMENT()
-                element->set_type("text");
 
-                std::string element_text = "";
+            element->set_attrs(element_attrs);
 
-                while (true) {
-                    END_IF_EOF()
+            int tokens_passed = _current_token - tokens.begin();
+            parse_elements(element, tokens);
 
-                    IF_TOKEN(TokenType::OTAG)
-                        break;
-                    END_BLOCK()
+            printf("END: %s\n", _current_token->content.c_str());
 
-                    element_text += token->content;
-                    GET_NEXT_TOKEN()
-                }
+            p_parent->add_element(element);
 
-                element->set_raw_text(element_text);
-                p_parent->add_element(element);
+        END_BLOCK()
+        IF_TOKEN(TokenType::IDNT)
+            NEW_ELEMENT()
+            element->set_type("text");
 
-            END_BLOCK()
+            std::string element_text = "";
+
+            while (true) {
+                END_IF_EOF()
+
+                IF_TOKEN(TokenType::OTAG)
+                    break;
+                END_BLOCK()
+
+                element_text += _current_token->content;
+                GET_NEXT_TOKEN()
+            }
+
+            element->set_raw_text(element_text);
+            printf("PAR: %s : %s\n", ((std::string)typeid(p_parent).name()).c_str(), element_text.c_str());
+            p_parent->add_element(element);
+
+        END_BLOCK()
+        IF_TOKEN(TokenType::CTAG)
+            return;
         END_BLOCK()
     }
 }
