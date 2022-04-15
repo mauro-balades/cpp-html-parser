@@ -2,14 +2,6 @@
 #include <gtest/gtest.h>
 #include <HTMLParser/HTMLParser.h>
 
-#include <cstdio>
-#include <cassert>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <iostream>
-#include <vector>
-
 class TextTest : public ::testing::Test {
 };
 
