@@ -123,6 +123,8 @@ namespace HTMLParser {
 
             int element_is_autoclosed = 0;
             IF_TOKEN(TokenType::DASH) // e.g. <input />
+                element_is_autoclosed = 1;
+
                 for (int i = 0; i < 2; i++) {
                     IGNORE_WHITE_SPACES()
                 }
@@ -132,22 +134,23 @@ namespace HTMLParser {
                 IGNORE_WHITE_SPACES()
             END_BLOCK()
 
+            if (!element_is_autoclosed) {
+                parse_elements(element, tokens);
 
-            parse_elements(element, tokens);
-
-            // Consume the closing tag
-            IF_TOKEN(TokenType::OTAG)
-                IGNORE_WHITE_SPACES()
-
-                IF_TOKEN(TokenType::DASH)
+                // Consume the closing tag
+                IF_TOKEN(TokenType::OTAG)
                     IGNORE_WHITE_SPACES()
 
-                    for (int i = 0; i < 2; i++) {
+                    IF_TOKEN(TokenType::DASH)
                         IGNORE_WHITE_SPACES()
-                    }
+
+                        for (int i = 0; i < 2; i++) {
+                            IGNORE_WHITE_SPACES()
+                        }
+                    END_BLOCK()
                 END_BLOCK()
-            END_BLOCK()
-            // ~Consume the closing tag
+                // ~Consume the closing tag
+            }
 
             p_parent->add_element(element);
 
@@ -163,10 +166,10 @@ namespace HTMLParser {
 
                 IF_TOKEN(TokenType::OTAG)
 
-                    IGNORE_WHITE_SPACES()
-                    IFN_TOKEN(TokenType::DASH)
-                        parse_elements(p_parent, tokens);
-                    END_BLOCK()
+                    // IGNORE_WHITE_SPACES()
+                    // IFN_TOKEN(TokenType::DASH)
+                    //     parse_elements(p_parent, tokens);
+                    // END_BLOCK()
 
                     break;
                 END_BLOCK()
