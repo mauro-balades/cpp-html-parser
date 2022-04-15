@@ -25,15 +25,12 @@ TEST_F(AttributesTest, TestBackwardsCompat) {
     parser->parse();
 
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
-    printf("ELM: %i\n", elements.size());
+    printf("Parsing element's attributes [%s]\n", code.c_str());
     for (int i = 0; i < elements.size(); i++) {
-        printf("ELM NUM: %i\n", elements.at(i)->get_elements().size());
-        // for(const auto& [k, v] : elements.at(i)->get_attrs())
-        // {
-        //     std::cout << k << " : " << v << "\n";
-        // }
-        if (elements.at(i)->type() == "text")
-            printf("ELM NAME: %s\n", elements.at(i)->raw_text().c_str());
+        for(const auto& attr : elements.at(i)->get_attrs())
+        {
+            printf("ATTR: %s : %s\n", attr.first.c_str(), attr.first.c_str());
+        }
     }
 
     close(fd);
