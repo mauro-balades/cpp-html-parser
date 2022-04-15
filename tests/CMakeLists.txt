@@ -3,6 +3,7 @@ set (SOURCE
     test_attrs.cc
     test_basics.cc
     test_text.cc
+    test_autoclosing_elements.cc
 )
 
 # include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
