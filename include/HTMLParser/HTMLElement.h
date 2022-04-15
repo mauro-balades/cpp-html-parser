@@ -61,6 +61,9 @@ namespace HTMLParser {
     class ButtonElement       : public HTMLElement {};
     class TextAreaElement     : public HTMLElement {};
     class FieldSetElement     : public HTMLElement {};
+
+    // Methods
+    HTMLElement* get_html_element_by_tagname(std::string tagname);
 }
 
 #endif /* _HTMLPARSER_ELEMENT_H_ */

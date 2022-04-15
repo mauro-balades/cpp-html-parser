@@ -1,9 +1,10 @@
 
-#include "HTMLParser/HTMLParser.h"
 #include "HTMLParser/HTMLDOM.h"
-#include "HTMLParser/HTMLTokenizer.h"
+#include "HTMLParser/HTMLParser.h"
 
 #include "HTMLParser/HTMLElement.h"
+#include "HTMLParser/HTMLTokenizer.h"
+
 
 #include <string>
 #include <typeinfo>
@@ -33,7 +34,10 @@
     END_BLOCK()                 \
 
 #define LOOP_TOKENS() for(std::vector<Token>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
-#define NEW_ELEMENT() HTMLElement* element = new HTMLElement();
+#define NEW_ELEMENT(name)                                     \
+    HTMLElement* element = get_html_element_by_tagname(name); \
+    element->set_tagname(name);
+
 
 #define NEW_ATTRS() std::map<std::string, std::string> element_attrs;
 #define ADD_ATTR(x, y)  element_attrs[x] = y;
@@ -69,7 +73,6 @@ namespace HTMLParser {
         IF_TOKEN(TokenType::OTAG)
 
             // Create a new instance of the element and go to the next token (ignoring white spaces)
-            NEW_ELEMENT()
             IGNORE_WHITE_SPACES()
 
             // We check if the current token is of type TokenType::_EOF.
@@ -77,9 +80,12 @@ namespace HTMLParser {
             // go to the end of the document.
             END_IF_EOF()
 
+            std::string tagname = "";
             IF_TOKEN(TokenType::IDNT)
-                element->set_tagname(_current_token->content);
+                tagname = _current_token->content;
             END_BLOCK()
+
+            NEW_ELEMENT(tagname)
 
             // Parse HTML element's attributes
 
@@ -157,7 +163,7 @@ namespace HTMLParser {
 
         END_BLOCK()
         IF_TOKEN(TokenType::IDNT)
-            NEW_ELEMENT()
+            NEW_ELEMENT("#text")
             element->set_type("text");
 
             std::string element_text = "";
