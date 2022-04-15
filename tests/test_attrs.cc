@@ -14,7 +14,7 @@ class AttributesTest : public ::testing::Test {
 };
 
 TEST_F(AttributesTest, TestBackwardsCompat) {
-    std::string code = "<h1 class=\"my_class\">hello</h1>";
+    std::string code = "<h1 class=\"my_class\" my-attr=\"hello!\">hello</h1>";
 
     int fd = open("my_file_attrs.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
     assert(fd >= 0);
