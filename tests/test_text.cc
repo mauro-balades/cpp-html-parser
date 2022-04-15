@@ -10,13 +10,13 @@
 #include <iostream>
 #include <vector>
 
-class AttributesTest : public ::testing::Test {
+class TextTest : public ::testing::Test {
 };
 
-TEST_F(AttributesTest, TestBackwardsCompat) {
-    std::string code = "<h1 class=\"my_class\" my-attr=\"hello!\"></h1>";
+TEST_F(TextTest, TestBackwardsCompat) {
+    std::string code = "<h1>my text</h1>";
 
-    int fd = open("my_file_attrs.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
+    int fd = open("my_file_text.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
     assert(fd >= 0);
     int ret = dup2(fd, 1);
     assert(ret >= 0);
@@ -27,10 +27,8 @@ TEST_F(AttributesTest, TestBackwardsCompat) {
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
     printf("Parsing element's attributes [%s]\n", code.c_str());
     for (int i = 0; i < elements.size(); i++) {
-        for(const auto& attr : elements.at(i)->get_attrs())
-        {
-            printf("ATTR: %s : %s\n", attr.first.c_str(), attr.first.c_str());
-        }
+        if (elements.at(i)->type() == "text")
+            printf("TEXT: %s\n", elements.at(i)->raw_text().c_str());
     }
 
     close(fd);

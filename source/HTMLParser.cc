@@ -44,14 +44,22 @@ namespace HTMLParser {
 
         std::vector<Token> tokens = _tokenizer->get_tokens();
         LOOP_TOKENS()
+
+            // Check if the character is an opening tag
             IF_TOKEN(TokenType::OTAG)
+
+                // Create a new instance of the element and go to the next token
                 GET_NEXT_TOKEN()
                 NEW_ELEMENT()
+
+                // We check if the current token is of type TokenType::_EOF.
+                // If it is, we just break the loop since it means that we
+                // go to the end of the document.
+                END_IF_EOF()
 
                 IF_TOKEN(TokenType::IDNT)
                     element->set_tagname(token->content);
                 END_BLOCK()
-                END_IF_EOF()
 
                 // Parse HTML element's attributes
 
@@ -96,6 +104,27 @@ namespace HTMLParser {
                     GET_NEXT_TOKEN()
                 END_BLOCK()
 
+                p_parent->add_element(element);
+
+            END_BLOCK()
+            IF_TOKEN(TokenType::IDNT)
+                NEW_ELEMENT()
+                element->set_type("text");
+
+                std::string element_text = "";
+
+                while (true) {
+                    END_IF_EOF()
+
+                    IF_TOKEN(TokenType::OTAG)
+                        break;
+                    END_BLOCK()
+
+                    element_text += token->content;
+                    GET_NEXT_TOKEN()
+                }
+
+                element->set_raw_text(element_text);
                 p_parent->add_element(element);
 
             END_BLOCK()
