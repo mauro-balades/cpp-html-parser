@@ -26,6 +26,7 @@
 #define IFN_TOKEN(tk) if (_current_token->type != tk) {
 #define END_BLOCK() }
 
+#define PEEK() std::vector<Token>::iterator peek = _current_token + 1;
 #define END_IF_EOF()            \
     IF_TOKEN(TokenType::_EOF)   \
         return;                 \
@@ -166,10 +167,10 @@ namespace HTMLParser {
 
                 IF_TOKEN(TokenType::OTAG)
 
-                    // IGNORE_WHITE_SPACES()
-                    // IFN_TOKEN(TokenType::DASH)
-                    //     parse_elements(p_parent, tokens);
-                    // END_BLOCK()
+                    PEEK()
+                    if (peek->type != TokenType::DASH) {
+                        parse_elements(p_parent, tokens);
+                    }
 
                     break;
                 END_BLOCK()
