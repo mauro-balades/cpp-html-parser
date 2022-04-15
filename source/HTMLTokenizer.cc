@@ -43,17 +43,15 @@ namespace HTMLParser {
                 }
             }
 
-            if (character != " ") { // ignore white spaces
-                // printf("HTML LEN: %s\n", character.c_str());
-                Token token = {
-                    .content = character,
+            Token token = {
+                .content = character,
 
-                    .type = type,
-                    .pos = &pos,
-                };
+                .type = type,
+                .pos = &pos,
+            };
 
-                _tokens.push_back(token);
-            }
+            _tokens.push_back(token);
+
 
             pos.x++;
             pos.real_pos++;

@@ -15,6 +15,7 @@ namespace HTMLParser {
         CASE(">", TokenType::CTAG)
         CASE("/", TokenType::DASH)
         CASE("'", TokenType::QUOT)
+        CASE(" ", TokenType::SPAC)
         CASE("\"", TokenType::QUOT)
 
         // Default should be other such as a character (A-Za-z1-0) wich it should be an identifier.

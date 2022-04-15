@@ -29,7 +29,7 @@ TEST_F(AttributesTest, TestBackwardsCompat) {
     for (int i = 0; i < elements.size(); i++) {
         for(const auto& attr : elements.at(i)->get_attrs())
         {
-            printf("ATTR: %s : %s\n", attr.first.c_str(), attr.first.c_str());
+            printf("ATTR: %s : %s\n", attr.first.c_str(), attr.second.c_str());
         }
     }
 

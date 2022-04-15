@@ -17,6 +17,7 @@ namespace HTMLParser {
         QUOT, // A quoting sign (", ')
         EQU,  // Equal sign (=)
 
+        SPAC, // A white space character ( )
         IDNT, // Identifier
     };
 

@@ -8,6 +8,18 @@
 #include <string>
 
 #define GET_NEXT_TOKEN() token++;
+#define IGNORE_WHITE_SPACES()       \
+    while (true) {                  \
+        END_IF_EOF()                \
+                                    \
+        GET_NEXT_TOKEN()            \
+        IF_TOKEN(TokenType::SPAC)   \
+            continue;               \
+        END_BLOCK()                 \
+                                    \
+        break;                      \
+    }
+
 
 #define IF_TOKEN(tk) if (token->type == tk) {
 #define END_BLOCK() }
@@ -48,9 +60,9 @@ namespace HTMLParser {
             // Check if the character is an opening tag
             IF_TOKEN(TokenType::OTAG)
 
-                // Create a new instance of the element and go to the next token
-                GET_NEXT_TOKEN()
+                // Create a new instance of the element and go to the next token (ignoring white spaces)
                 NEW_ELEMENT()
+                IGNORE_WHITE_SPACES()
 
                 // We check if the current token is of type TokenType::_EOF.
                 // If it is, we just break the loop since it means that we
@@ -66,8 +78,8 @@ namespace HTMLParser {
                 NEW_ATTRS()
                 while (true) {
                     END_IF_EOF()
+                    IGNORE_WHITE_SPACES()
 
-                    GET_NEXT_TOKEN()
                     IF_TOKEN(TokenType::CTAG)
                         break;
                     END_BLOCK()
@@ -75,10 +87,10 @@ namespace HTMLParser {
                         std::string attr_name = token->content;
                         std::string attr_val  = "";
 
-                        GET_NEXT_TOKEN()
+                        IGNORE_WHITE_SPACES()
                         IF_TOKEN(TokenType::EQU)
 
-                            GET_NEXT_TOKEN()
+                            IGNORE_WHITE_SPACES()
                             IF_TOKEN(TokenType::QUOT)
                                 while (true) {
                                     END_IF_EOF()
@@ -88,13 +100,15 @@ namespace HTMLParser {
                                         break;
                                     END_BLOCK()
 
+
                                     attr_val += token->content;
                                 }
                             END_BLOCK()
-                        END_BLOCK()
 
-                        ADD_ATTR(attr_name, attr_val)
+                            ADD_ATTR(attr_name, attr_val)
+                        END_BLOCK()
                     END_BLOCK()
+
                 }
 
                 element->set_attrs(element_attrs);

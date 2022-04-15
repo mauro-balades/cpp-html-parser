@@ -25,7 +25,7 @@ TEST_F(TextTest, TestBackwardsCompat) {
     parser->parse();
 
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
-    printf("Parsing element's attributes [%s]\n", code.c_str());
+    printf("Parsing element's text [%s]\n", code.c_str());
     for (int i = 0; i < elements.size(); i++) {
         if (elements.at(i)->type() == "text")
             printf("TEXT: %s\n", elements.at(i)->raw_text().c_str());
