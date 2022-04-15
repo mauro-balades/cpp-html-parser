@@ -13,27 +13,37 @@
 class AttributesTest : public ::testing::Test {
 };
 
-TEST_F(AttributesTest, TestBackwardsCompat) {
-    std::string code = "<h1 class=\"my_class\" my-attr=\"hello!\"></h1>";
+class AttributesWithDashTest : public ::testing::Test {
+};
 
-    int fd = open("my_file_attrs.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
-    assert(fd >= 0);
-    int ret = dup2(fd, 1);
-    assert(ret >= 0);
+TEST_F(AttributesTest, TestBackwardsCompat) {
+    std::string code = "<h1 class=\"my_class\"></h1>";
 
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();
 
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
-    printf("Parsing element's attributes [%s]\n", code.c_str());
     for (int i = 0; i < elements.size(); i++) {
         for(const auto& attr : elements.at(i)->get_attrs())
         {
-            printf("ATTR: %s : %s\n", attr.first.c_str(), attr.second.c_str());
+            EXPECT_TRUE(attr.first == std::string("class"));
+            EXPECT_TRUE(attr.second == std::string("my_class"));
         }
     }
-
-    close(fd);
-    EXPECT_TRUE(true);
 }
 
+TEST_F(AttributesWithDashTest, TestBackwardsCompat) {
+    std::string code = "<h1 my-attribute=\"hello\"></h1>";
+
+    HTMLParser::Parser* parser = new HTMLParser::Parser(code);
+    parser->parse();
+
+    std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
+    for (int i = 0; i < elements.size(); i++) {
+        for(const auto& attr : elements.at(i)->get_attrs())
+        {
+            EXPECT_TRUE(attr.first == std::string("my-attribute"));
+            EXPECT_TRUE(attr.second == std::string("hello"));
+        }
+    }
+}

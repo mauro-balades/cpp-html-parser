@@ -2,7 +2,6 @@
 set (SOURCE
     test_attrs.cc
     test_basics.cc
-    test_tokenizer.cc
     test_text.cc
 )
 

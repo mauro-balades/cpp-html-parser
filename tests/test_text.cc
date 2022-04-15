@@ -16,11 +16,6 @@ class TextTest : public ::testing::Test {
 TEST_F(TextTest, TestBackwardsCompat) {
     std::string code = "<h1>my text</h1>";
 
-    int fd = open("my_file_text.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
-    assert(fd >= 0);
-    int ret = dup2(fd, 1);
-    assert(ret >= 0);
-
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();
 
@@ -28,10 +23,7 @@ TEST_F(TextTest, TestBackwardsCompat) {
     printf("Parsing element's text [%s]\n", code.c_str());
     for (int i = 0; i < elements.size(); i++) {
         if (elements.at(i)->get_elements().at(0)->type() == "text")
-            printf("TEXT: %s\n", elements.at(i)->get_elements().at(0)->raw_text().c_str());
+            EXPECT_TRUE(elements.at(i)->get_elements().at(0)->raw_text() == std::string("my text"));
     }
-
-    close(fd);
-    EXPECT_TRUE(true);
 }
 
