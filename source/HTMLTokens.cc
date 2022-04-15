@@ -4,21 +4,18 @@
 #include <string>
 #include <cstring>
 
+#define CASE(x, y) if (character == x) return y;
+
 namespace HTMLParser {
 
     TokenType get_token_type(std::string character) {
 
-        if (character == "<") {
-            return TokenType::OTAG;
-        } else if (character == ">") {
-            return TokenType::CTAG;
-        } else if (character == "/") {
-            return TokenType::DASH;
-        } else if (character == "\"" || character == "'") {
-            return TokenType::QUOT;
-        } else if (character == "=") {
-            return TokenType::EQU;
-        }
+        CASE("=", TokenType::EQU)
+        CASE("<", TokenType::OTAG)
+        CASE(">", TokenType::CTAG)
+        CASE("/", TokenType::DASH)
+        CASE("'", TokenType::QUOT)
+        CASE("\"", TokenType::QUOT)
 
         // Default should be other such as a character (A-Za-z1-0) wich it should be an identifier.
         return TokenType::IDNT;
