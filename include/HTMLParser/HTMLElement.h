@@ -1,6 +1,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #ifndef _HTMLPARSER_ELEMENT_H_
 #define _HTMLPARSER_ELEMENT_H_
@@ -36,6 +37,30 @@ namespace HTMLParser {
             std::map<std::string, std::string> _attrs;
 
     };
+
+    // Special types of HTML elements
+    class CommentElement : public HTMLElement {};
+    class DocTypeElement : public HTMLElement {};
+
+    // Normal HTML elements (supported with HTML 5)
+    // note:
+    //  If the HTML element is not supported in HTML 5,
+    //  nor it does not exist in the list bellow,
+    //  it will just be a HTMLElement class, with no special
+    //  child class.
+    class DivElement          : public HTMLElement {};
+    class FormElement         : public HTMLElement {};
+    class SpanElement         : public HTMLElement {};
+    class LabelElement        : public HTMLElement {};
+    class TableElement        : public HTMLElement {};
+    class InputElement        : public HTMLElement {};
+    class ImageElement        : public HTMLElement {};
+    class SelectElement       : public HTMLElement {};
+    class OptionElement       : public HTMLElement {};
+    class AnchorElement       : public HTMLElement {};
+    class ButtonElement       : public HTMLElement {};
+    class TextAreaElement     : public HTMLElement {};
+    class FieldSetElement     : public HTMLElement {};
 }
 
 #endif /* _HTMLPARSER_ELEMENT_H_ */
