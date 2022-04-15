@@ -22,7 +22,8 @@
     }
 
 
-#define IF_TOKEN(tk) if (_current_token->type == tk) {
+#define IF_TOKEN(tk)  if (_current_token->type == tk) {
+#define IFN_TOKEN(tk) if (_current_token->type != tk) {
 #define END_BLOCK() }
 
 #define END_IF_EOF()            \
@@ -118,16 +119,35 @@ namespace HTMLParser {
             }
 
             // ~Parse HTML element's attributes
-            IF_TOKEN(TokenType::CTAG)
-                GET_NEXT_TOKEN()
-            END_BLOCK()
-
             element->set_attrs(element_attrs);
 
-            int tokens_passed = _current_token - tokens.begin();
+            int element_is_autoclosed = 0;
+            IF_TOKEN(TokenType::DASH) // e.g. <input />
+                for (int i = 0; i < 2; i++) {
+                    IGNORE_WHITE_SPACES()
+                }
+            END_BLOCK()
+
+            IF_TOKEN(TokenType::CTAG)
+                IGNORE_WHITE_SPACES()
+            END_BLOCK()
+
+
             parse_elements(element, tokens);
 
-            printf("END: %s\n", _current_token->content.c_str());
+            // Consume the closing tag
+            IF_TOKEN(TokenType::OTAG)
+                IGNORE_WHITE_SPACES()
+
+                IF_TOKEN(TokenType::DASH)
+                    IGNORE_WHITE_SPACES()
+
+                    for (int i = 0; i < 2; i++) {
+                        IGNORE_WHITE_SPACES()
+                    }
+                END_BLOCK()
+            END_BLOCK()
+            // ~Consume the closing tag
 
             p_parent->add_element(element);
 
@@ -142,6 +162,12 @@ namespace HTMLParser {
                 END_IF_EOF()
 
                 IF_TOKEN(TokenType::OTAG)
+
+                    IGNORE_WHITE_SPACES()
+                    IFN_TOKEN(TokenType::DASH)
+                        parse_elements(p_parent, tokens);
+                    END_BLOCK()
+
                     break;
                 END_BLOCK()
 
@@ -150,7 +176,6 @@ namespace HTMLParser {
             }
 
             element->set_raw_text(element_text);
-            printf("PAR: %s : %s\n", ((std::string)typeid(p_parent).name()).c_str(), element_text.c_str());
             p_parent->add_element(element);
 
         END_BLOCK()
