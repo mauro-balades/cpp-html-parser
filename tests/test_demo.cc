@@ -43,18 +43,18 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     std::string code =
         "<html>"
             "<head>"
-                "<link href='style.css'/>"
+                // "<link />"
             "</head>"
             "<body>"
-                "<p>Hello, world!</p>"
-                "<d>Hello, world!</d>"
+                "<p></p>"
+                "<d></d>"
                 "<d><awd></awd></d>"
             "</body>"
         "</html>";
-    int fd = open("my_file_demo.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
-    assert(fd >= 0);
-    int ret = dup2(fd, 1);
-    assert(ret >= 0);
+    // int fd = open("my_file_demo.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
+    // assert(fd >= 0);
+    // int ret = dup2(fd, 1);
+    // assert(ret >= 0);
 
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();
@@ -67,6 +67,6 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     }
     printElements(elements);
 
-    close(fd);
+    // close(fd);
     EXPECT_TRUE(true);
 }
