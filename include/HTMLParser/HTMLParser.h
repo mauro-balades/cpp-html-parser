@@ -29,6 +29,8 @@ namespace HTMLParser {
             template <typename T>
             void parse_elements(T* p_parent, std::vector<Token> tokens);
 
+            template <typename T>
+            void parse_text(T* p_parent);
             DOM* dom() { return _dom; }
 
         private:

@@ -48,14 +48,10 @@ TEST_F(DemoTest, TestBackwardsCompat) {
                 "<link rel=\"stylesheet\" href=\"style.css\" />"
             "</head>"
             "<body>"
-                "<h1 onClick=\"alert(1);\"></h1>"
-                "<p style=\"color: red;\"></p>"
+                "<h1>This is a great header</h1>"
+                "<p style=\"color: red;\">Lorem ipsum...</p>"
             "</body>"
         "</html>";
-    // int fd = open("my_file_demo.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
-    // assert(fd >= 0);
-    // int ret = dup2(fd, 1);
-    // assert(ret >= 0);
 
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();
@@ -63,6 +59,5 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
     printElements(elements);
 
-    // close(fd);
     EXPECT_TRUE(true);
 }

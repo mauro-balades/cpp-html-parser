@@ -206,36 +206,36 @@ namespace HTMLParser {
             END_IF_EOF()
 
         END_BLOCK()
-        // IF_TOKEN(TokenType::IDNT)
+        IF_TOKEN(TokenType::IDNT)
+            parse_text(p_parent);
+        END_BLOCK()
+    }
 
-        //     NEW_ELEMENT("#text")
-        //     element->set_type("text");
+    template <typename T>
+    void Parser::parse_text(T* p_parent) {
+        NEW_ELEMENT("#text")
+        element->set_type("text");
 
-        //     std::string element_text = "";
+        std::string element_text = "";
 
-        //     while (true) {
-        //         END_IF_EOF()
+        while (true) {
+            END_IF_EOF()
 
-        //         element_text += _current_token->content;
-        //         GET_NEXT_TOKEN()
+            element_text += _current_token->content;
+            GET_NEXT_TOKEN()
 
-        //         IF_TOKEN(TokenType::OTAG)
+            IF_TOKEN(TokenType::OTAG)
 
-        //             PEEK()
-        //             if (peek->type != TokenType::DASH) {
-        //                 parse_elements(p_parent, tokens);
-        //             } else {
-        //                 GET_NEXT_TOKEN()
-        //                 GET_NEXT_TOKEN()
-        //             }
-        //             break;
-        //         END_BLOCK()
-        //     }
+                PEEK()
+                if (peek->type != TokenType::DASH || peek->type != TokenType::IDNT) {
+                    break;
+                }
+                break;
+            END_BLOCK()
+        }
 
-        //     element->set_raw_text(element_text);
-        //     p_parent->add_element(element);
-
-        // END_BLOCK()
+        element->set_raw_text(element_text);
+        p_parent->add_element(element);
     }
 
     void Parser::parse_attributes(std::map<std::string, std::string> &element_attrs) {
