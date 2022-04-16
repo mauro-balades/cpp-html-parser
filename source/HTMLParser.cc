@@ -79,6 +79,7 @@ namespace HTMLParser {
             // We check if the current token is a dash.
             // If it is a dash, we will just return, because
             // it means there is an error with the HTML document.
+            // e.g. An empty element has a closing tag.
             // TODO: finish parsing the ending tag?
             IF_TOKEN(TokenType::DASH)
                 return;
@@ -124,38 +125,76 @@ namespace HTMLParser {
             // Set the attributes to the current element.
             element->set_attrs(element_attrs);
 
-            
-            int element_is_autoclosed = 0;
+            // Detect if an element is an empty element.
+            // If the element is an empty element, we do not
+            // need to continue parsing because it is not "allowed"
+            // to have elements inside it.
+            // --------------------------------------------------------
+            // If the element is empty AND it does have an empty tag,
+            // this will be parsed at the top of the function because
+            // we do not expect a closing tag.
+            int element_is_autoclosed = detect_if_empty_element_by_tagname(tagname);
 
+            // If there is a dash (/) we asume we encountered an empty class.
             if (_current_token->type == TokenType::DASH) { // e.g. <input />
                 element_is_autoclosed = 1;
                 GET_NEXT_TOKEN()
             }
 
+            // If we found a closing tag symbol (>), we just consume
+            // it. we expect a closing tag symbol anyways because we
+            // just finished parsing the opening tag.
+            // TODO: Throw an error if there is no closing symbol (>)?
             IF_TOKEN(TokenType::CTAG)
                 GET_NEXT_TOKEN()
             END_BLOCK()
 
+            // Check if we have an empty element. If we have an empty tag,
+            // just ignore this steps and don't parse any child elements.
             if (!element_is_autoclosed) {
 
                 while (true) {
-                    parse_elements(element, tokens);
-                    PEEK_BACKWARDS()
-                    IGNORE_WHITE_SPACES()
 
-                    // Consume the closing tag
+                    // Parse inner elements of the current element.
+                    // <div><p></p></div>
+                    //      ^~~~~~^       - inner
+                    // ^~~~^       ^~~~~^ - current
+                    parse_elements(element, tokens);
+
+                    IGNORE_WHITE_SPACES()
+                    PEEK_BACKWARDS()
+
+                    // Check if we found the closing tag (as expected).
+                    // TODO: what happens if no ending tag?
                     if (peek->type == TokenType::OTAG) {
 
+                        // We iterate infinitally untill we find a closing symbol (>).
+                        // This is because ending tag might have attributes and this
+                        // attributes MUST not be included into the final DOM.
+                        // https://html.spec.whatwg.org/multipage/parsing.html#parse-error-end-tag-with-attributes
                         while (true) {
                             END_IF_EOF()
 
                             IF_TOKEN(TokenType::CTAG)
+
+                                // Add the parent to the DOM.
+                                // We only add it IF we do not
+                                // encounter an EOF or a ">"
                                 p_parent->add_element(element);
+
+                                // Consume ">"
                                 GET_NEXT_TOKEN()
 
+                                // Return because if the element is an
+                                // empty element, we would add it to the
+                                // end of the function. This is to prevent
+                                // duplication.
                                 return;
                             END_BLOCK()
 
+                            // Keep getting the next token until
+                            // we find EOF or ">". To prevent infinite
+                            // loops.
                             GET_NEXT_TOKEN()
                         }
                     }
@@ -201,8 +240,15 @@ namespace HTMLParser {
 
     void Parser::parse_attributes(std::map<std::string, std::string> &element_attrs) {
         while (true) {
+
+            // Always get the next token to
+            // prevent an infinite loop.
             GET_NEXT_TOKEN()
 
+            // If we find any of this characters,
+            // we encountered the end of the tag.
+            // we shall stop this loop end finish
+            // parsing the element.
             IF_TOKEN(TokenType::CTAG)
                 break;
             END_BLOCK()
@@ -210,31 +256,55 @@ namespace HTMLParser {
                 break;
             END_BLOCK()
 
+            // Otherwise, if we have an identifier,
+            // we got an attribute name.
             IF_TOKEN(TokenType::IDNT)
 
                 std::string attr_name = _current_token->content;
                 std::string attr_val  = "";
 
+                // get the next character that is
+                // not a white space.
                 IGNORE_WHITE_SPACES()
                 GET_NEXT_TOKEN()
 
+                // IF we encounter an equal sign,
+                // we will parse attribute's content.
+                // if not, we will just set it to default
+                // value ("")
+                // https://html.spec.whatwg.org/multipage/parsing.html#parse-error-missing-attribute-value
                 IF_TOKEN(TokenType::EQU)
+
 
                     IGNORE_WHITE_SPACES()
                     GET_NEXT_TOKEN()
 
+                    // Check if the current (non white space) token
+                    // is a quote.
+                    // TODO: handle un-quoted attribute value
                     IF_TOKEN(TokenType::QUOT)
                         while (true) {
+
+                            // Keep adding the current token's
+                            // to the attribute's value.
+                            // TODO: check if quotes are the same
+                            // TODO: checked if quote is scaped
                             GET_NEXT_TOKEN()
                             IF_TOKEN(TokenType::QUOT)
                                 break;
                             END_BLOCK()
 
+                            // Add content to the attribute's value.
                             attr_val += _current_token->content;
                         }
                     END_BLOCK()
                 END_BLOCK()
 
+                // Add a new attribute to the list.
+                // note: we use operator[] because,
+                // if the attribute already exists, we can
+                // just replace it's value with a new one.
+                // https://html.spec.whatwg.org/multipage/parsing.html#parse-error-duplicate-attribute
                 ADD_ATTR(attr_name, attr_val)
             END_BLOCK()
 
