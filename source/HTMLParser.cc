@@ -143,14 +143,14 @@ namespace HTMLParser {
             // ~Parse HTML element's attributes
 
             int element_is_autoclosed = 0;
-            IGNORE_WHITE_SPACES()
             GET_NEXT_TOKEN()
+            IGNORE_WHITE_SPACES()
 
-
-            IF_TOKEN(TokenType::DASH) // e.g. <input />
+            if (_current_token->type == TokenType::DASH) { // e.g. <input />
                 element_is_autoclosed = 1;
                 GET_NEXT_TOKEN()
-            END_BLOCK()
+            }
+
             IF_TOKEN(TokenType::CTAG)
                 GET_NEXT_TOKEN()
             END_BLOCK()
@@ -184,7 +184,6 @@ namespace HTMLParser {
 
             p_parent->add_element(element);
             END_IF_EOF()
-
 
         END_BLOCK()
         // IF_TOKEN(TokenType::IDNT)

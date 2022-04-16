@@ -27,7 +27,7 @@ void printElements(std::vector<HTMLParser::HTMLElement*> elements, int index = 0
         std::string tab_repeat("");
         tab_repeat.insert(0, index, '\t');
 
-        printf("%s%s (%i)", tab_repeat.c_str(), element->get_tagname().c_str(), elements.size());
+        printf("%s%s (%i)", tab_repeat.c_str(), element->get_tagname().c_str(), index);
 
         if (element->type() == std::string("text")) {
             printf(" - %s\n", element->raw_text().c_str());
@@ -43,7 +43,7 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     std::string code =
         "<html>"
             "<head>"
-                // "<link />"
+                "<link />"
             "</head>"
             "<body>"
                 "<p></p>"
@@ -60,11 +60,6 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     parser->parse();
 
     std::vector<HTMLParser::HTMLElement*> elements = parser->dom()->get_elements();
-    printf("EL SIZE: %i", elements.size());
-    for (int i = 0; i < elements.size(); i++) {
-        printf("EL: %s(%i)\n", elements.at(i)->get_tagname().c_str());
-
-    }
     printElements(elements);
 
     // close(fd);

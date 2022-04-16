@@ -6,7 +6,7 @@ class AutoclosingElementsTest : public ::testing::Test {
 };
 
 TEST_F(AutoclosingElementsTest, TestBackwardsCompat) {
-    std::string code = "<input placeholder=\"please, enter a password\" /><button type='submit'>submit</button>";
+    std::string code = "<input /><button type='submit'>submit</button>";
 
     HTMLParser::Parser* parser = new HTMLParser::Parser(code);
     parser->parse();
