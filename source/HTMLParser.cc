@@ -72,10 +72,14 @@ namespace HTMLParser {
         // Check if the character is an opening tag
         IF_TOKEN(TokenType::OTAG)
 
-            // Create a new instance of the element and go to the next token (ignoring white spaces)
+            // Consume the opening tag for the current token (<)
             IGNORE_WHITE_SPACES()
             GET_NEXT_TOKEN()
 
+            // We check if the current token is a dash.
+            // If it is a dash, we will just return, because
+            // it means there is an error with the HTML document.
+            // TODO: finish parsing the ending tag?
             IF_TOKEN(TokenType::DASH)
                 return;
             END_BLOCK()
@@ -85,21 +89,42 @@ namespace HTMLParser {
             // go to the end of the document.
             END_IF_EOF()
 
+            // By default, the tag name  will be empty.
+            // this is not allowed in HTML5 as said in the specs.
+            // otherwise, if the current token is an identifier,
+            // we will put this token's content as the tagname.
+            // <tagname ...
+            //  ^~~~~~^
             std::string tagname = "";
             IF_TOKEN(TokenType::IDNT)
                 tagname = _current_token->content;
             END_BLOCK()
 
+            // Create a new instance of an element.
+            // This macro also has another functionality.
+            // It gets an appropiate class for the element
+            // depending on the tagname (wich it is why tagname
+            // is a parameter). It also sets the tagname to that
+            // element.
             NEW_ELEMENT(tagname)
 
-            // Parse HTML element's attributes
+            /// Parse HTML element's attributes
 
+            // We create a new map of 2 strings that will be used
+            // as a key-value list for the attributes. The first
+            // item(key) will be considered as the attribute's
+            // name. And the second one(value) is the attribute's
+            // value.
             NEW_ATTRS()
+
+            // We parse the attributes and insert the into the map
+            // declared before.
             parse_attributes(element_attrs);
+
+            // Set the attributes to the current element.
             element->set_attrs(element_attrs);
 
-            // ~Parse HTML element's attributes
-
+            
             int element_is_autoclosed = 0;
 
             if (_current_token->type == TokenType::DASH) { // e.g. <input />
