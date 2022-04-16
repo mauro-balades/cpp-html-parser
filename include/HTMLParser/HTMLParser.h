@@ -41,6 +41,7 @@ namespace HTMLParser {
             Token peek();
 
             std::vector<HTMLParser::Token>::iterator _current_token;
+            void parse_attributes(std::map<std::string, std::string> &element_attrs);
     };
 }
 

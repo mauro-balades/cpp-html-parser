@@ -77,7 +77,6 @@ namespace HTMLParser {
             GET_NEXT_TOKEN()
 
             IF_TOKEN(TokenType::DASH)
-                // GET_PREV_TOKEN()
                 return;
             END_BLOCK()
 
@@ -96,46 +95,7 @@ namespace HTMLParser {
             // Parse HTML element's attributes
 
             NEW_ATTRS()
-            while (true) {
-                GET_NEXT_TOKEN()
-
-                IF_TOKEN(TokenType::CTAG)
-                    break;
-                END_BLOCK()
-                IF_TOKEN(TokenType::DASH)
-                    break;
-                END_BLOCK()
-
-                IF_TOKEN(TokenType::IDNT)
-
-                    std::string attr_name = _current_token->content;
-                    std::string attr_val  = "";
-
-                    IGNORE_WHITE_SPACES()
-                    GET_NEXT_TOKEN()
-
-                    IF_TOKEN(TokenType::EQU)
-
-                        IGNORE_WHITE_SPACES()
-                        GET_NEXT_TOKEN()
-
-                        IF_TOKEN(TokenType::QUOT)
-                            while (true) {
-                                GET_NEXT_TOKEN()
-                                IF_TOKEN(TokenType::QUOT)
-                                    break;
-                                END_BLOCK()
-
-                                attr_val += _current_token->content;
-                            }
-                        END_BLOCK()
-                    END_BLOCK()
-
-                    ADD_ATTR(attr_name, attr_val)
-                END_BLOCK()
-
-            }
-
+            parse_attributes(element_attrs);
             element->set_attrs(element_attrs);
 
             // ~Parse HTML element's attributes
@@ -212,5 +172,47 @@ namespace HTMLParser {
         //     p_parent->add_element(element);
 
         // END_BLOCK()
+    }
+
+    void Parser::parse_attributes(std::map<std::string, std::string> &element_attrs) {
+        while (true) {
+            GET_NEXT_TOKEN()
+
+            IF_TOKEN(TokenType::CTAG)
+                break;
+            END_BLOCK()
+            IF_TOKEN(TokenType::DASH)
+                break;
+            END_BLOCK()
+
+            IF_TOKEN(TokenType::IDNT)
+
+                std::string attr_name = _current_token->content;
+                std::string attr_val  = "";
+
+                IGNORE_WHITE_SPACES()
+                GET_NEXT_TOKEN()
+
+                IF_TOKEN(TokenType::EQU)
+
+                    IGNORE_WHITE_SPACES()
+                    GET_NEXT_TOKEN()
+
+                    IF_TOKEN(TokenType::QUOT)
+                        while (true) {
+                            GET_NEXT_TOKEN()
+                            IF_TOKEN(TokenType::QUOT)
+                                break;
+                            END_BLOCK()
+
+                            attr_val += _current_token->content;
+                        }
+                    END_BLOCK()
+                END_BLOCK()
+
+                ADD_ATTR(attr_name, attr_val)
+            END_BLOCK()
+
+        }
     }
 }
