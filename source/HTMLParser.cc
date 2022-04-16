@@ -95,56 +95,52 @@ namespace HTMLParser {
 
             // Parse HTML element's attributes
 
-            // NEW_ATTRS()
-            // while (true) {
-            //     GET_NEXT_TOKEN()
-            //     END_IF_EOF()
+            NEW_ATTRS()
+            while (true) {
+                GET_NEXT_TOKEN()
 
-            //     IF_TOKEN(TokenType::CTAG)
-            //         break;
-            //     END_BLOCK()
-            //     IF_TOKEN(TokenType::DASH)
-            //         break;
-            //     END_BLOCK()
-            //     IF_TOKEN(TokenType::IDNT)
+                IF_TOKEN(TokenType::CTAG)
+                    break;
+                END_BLOCK()
+                IF_TOKEN(TokenType::DASH)
+                    break;
+                END_BLOCK()
 
-            //         std::string attr_name = _current_token->content;
-            //         std::string attr_val  = "";
+                IF_TOKEN(TokenType::IDNT)
 
-            //         IGNORE_WHITE_SPACES()
-            //         GET_NEXT_TOKEN()
+                    std::string attr_name = _current_token->content;
+                    std::string attr_val  = "";
 
-            //         IF_TOKEN(TokenType::EQU)
+                    IGNORE_WHITE_SPACES()
+                    GET_NEXT_TOKEN()
 
-            //             IGNORE_WHITE_SPACES()
-            //             GET_NEXT_TOKEN()
+                    IF_TOKEN(TokenType::EQU)
 
-            //             IF_TOKEN(TokenType::QUOT)
-            //                 while (true) {
-            //                     END_IF_EOF()
+                        IGNORE_WHITE_SPACES()
+                        GET_NEXT_TOKEN()
 
-            //                     GET_NEXT_TOKEN()
-            //                     IF_TOKEN(TokenType::QUOT)
-            //                         break;
-            //                     END_BLOCK()
+                        IF_TOKEN(TokenType::QUOT)
+                            while (true) {
+                                GET_NEXT_TOKEN()
+                                IF_TOKEN(TokenType::QUOT)
+                                    break;
+                                END_BLOCK()
 
-            //                     attr_val += _current_token->content;
-            //                 }
-            //             END_BLOCK()
+                                attr_val += _current_token->content;
+                            }
+                        END_BLOCK()
+                    END_BLOCK()
 
-            //             ADD_ATTR(attr_name, attr_val)
-            //         END_BLOCK()
-            //     END_BLOCK()
+                    ADD_ATTR(attr_name, attr_val)
+                END_BLOCK()
 
-            // }
+            }
 
-            // element->set_attrs(element_attrs);
+            element->set_attrs(element_attrs);
 
             // ~Parse HTML element's attributes
 
             int element_is_autoclosed = 0;
-            GET_NEXT_TOKEN()
-            IGNORE_WHITE_SPACES()
 
             if (_current_token->type == TokenType::DASH) { // e.g. <input />
                 element_is_autoclosed = 1;

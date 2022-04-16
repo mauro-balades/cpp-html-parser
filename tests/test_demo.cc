@@ -13,11 +13,6 @@
 class DemoTest : public ::testing::Test {
 };
 
-        // for(const auto& attr : element->get_attrs())
-        // {
-        //     printf("\tATTR: %s : %s\n", attr.first.c_str(), attr.second.c_str());
-        // }
-
 void printElements(std::vector<HTMLParser::HTMLElement*> elements, int index = 0) {
     if (elements.size() == 0) return;
 
@@ -27,7 +22,14 @@ void printElements(std::vector<HTMLParser::HTMLElement*> elements, int index = 0
         std::string tab_repeat("");
         tab_repeat.insert(0, index, '\t');
 
-        printf("%s%s (%i)", tab_repeat.c_str(), element->get_tagname().c_str(), index);
+        printf("%s%s (%i) [", tab_repeat.c_str(), element->get_tagname().c_str(), index);
+
+        for(const auto& attr : element->get_attrs())
+        {
+            printf("%s: \"%s\", ", attr.first.c_str(), attr.second.c_str());
+        }
+
+        printf("]");
 
         if (element->type() == std::string("text")) {
             printf(" - %s\n", element->raw_text().c_str());
@@ -43,12 +45,11 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     std::string code =
         "<html>"
             "<head>"
-                "<link />"
+                "<link rel=\"stylesheet\" href=\"style.css\" />"
             "</head>"
             "<body>"
-                "<p></p>"
-                "<d></d>"
-                "<d><awd></awd></d>"
+                "<h1 onClick=\"alert(1);\"></h1>"
+                "<p style=\"color: red;\"></p>"
             "</body>"
         "</html>";
     // int fd = open("my_file_demo.log", O_WRONLY|O_CREAT|O_TRUNC, 0660);
