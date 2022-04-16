@@ -63,6 +63,7 @@ namespace HTMLParser {
     class FieldSetElement     : public HTMLElement {};
 
     // Methods
+    int detect_if_empty_element_by_tagname(std::string tagname);
     HTMLElement* get_html_element_by_tagname(std::string tagname);
 }
 
