@@ -14,3 +14,4 @@
 ## New
 * Add support for comments
 * Add support for DOCTYPE
+* Add support for full TEXT mode. For scripts, styles, etc...
