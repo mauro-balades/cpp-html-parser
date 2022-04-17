@@ -92,27 +92,52 @@ namespace HTMLParser {
                 GET_NEXT_TOKEN()
                 IGNORE_WHITE_SPACES()
 
+                // See if the current token starts with "--". We do this because
+                // "--" is considered as an identifier. This means that if we have
+                // a comment like this: "<!--hello->" we will have the identifier
+                // "--hello" and that is why we don't check for the token type.
                 if (_current_token->content.rfind("--", 0) == 0) {
+
+                    // Make a copy of the token's content to not change the current
+                    // token's content.
                     std::string token_copy = _current_token->content;
 
+                    // Remove the first 2 caracters of the comment ("--")
                     token_copy.erase(0, 2);
+
+                    // Start an empty comment with the current token's content with the
+                    // first 2 characters removed.
                     std::string comment_content = token_copy;
 
                     PEEK()
                     int end_comment = 0;
-                    if (peek->type == TokenType::CTAG) {
-                        GET_NEXT_TOKEN()
-                        GET_NEXT_TOKEN()
+
+                    // We check if the next character is a closing symbol (>) and that the
+                    // current token is exactly "--" or "---". This is because according to the HTML5
+                    // specs, we can have comments such as: "<!-->" and "<!--->".
+                    // https://html.spec.whatwg.org/multipage/parsing.html#parse-error-abrupt-closing-of-empty-comment
+                    if (peek->type == TokenType::CTAG && (_current_token->content == "--" || _current_token->content == "---")) {
+                        GET_NEXT_TOKEN() // Consume "--" or "---"
+                        GET_NEXT_TOKEN() // Consume ">"
+
+                        // Set the comment as closed.
                         end_comment = 1;
                     }
 
                     while (!end_comment) {
                         GET_NEXT_TOKEN()
 
+                        // The next 2 if statements are used to check if the current token ends
+                        // with "--"
                         if (_current_token->content.length() >= COMMENT_END().length()) {
                             if (0 == _current_token->content.compare (_current_token->content.length() - COMMENT_END().length(), COMMENT_END().length(), COMMENT_END()  )) {
 
                                 PEEK()
+
+                                // If the next token is a closing symbol (>) we just consume
+                                // this 2 tokens and consither the comment as closed.
+                                // TODO: add the current token's content to the comment
+                                //       but remove the last 2 characters
                                 if (peek->type == CTAG) {
                                     GET_NEXT_TOKEN()
                                     GET_NEXT_TOKEN()
@@ -124,10 +149,14 @@ namespace HTMLParser {
                         comment_content += _current_token->content;
                     }
 
+                    // Create a new element with the "#comment" tagname
                     NEW_ELEMENT("#comment")
+
+                    // Set type and raw text to the comment.
                     element->set_raw_text(comment_content);
                     element->set_type("comment");
 
+                    // Add it to the parent element.
                     p_parent->add_element(element);
                 }
 
