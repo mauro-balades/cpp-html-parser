@@ -10,8 +10,8 @@
 * handle un-quoted attribute value (Unquoted attributes are not that common)
 * checked if quote is scaped in attribute's value
 * [SEE YOURSELF] TODOS written in the code (`// TODO: ...`)
+* Comments start with a white space (try to fix that)
 
 ## New
-* Add support for comments
 * Add support for DOCTYPE
 * Add support for full TEXT mode. For scripts, styles, etc...

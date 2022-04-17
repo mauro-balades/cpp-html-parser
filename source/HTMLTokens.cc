@@ -14,6 +14,7 @@ namespace HTMLParser {
         CASE("<", TokenType::OTAG)
         CASE(">", TokenType::CTAG)
         CASE("/", TokenType::DASH)
+        CASE("!", TokenType::EXCL)
         CASE("'", TokenType::QUOT)
         CASE(" ", TokenType::SPAC)
         CASE("\"", TokenType::QUOT)

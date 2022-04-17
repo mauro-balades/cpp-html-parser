@@ -31,7 +31,7 @@ void printElements(std::vector<HTMLParser::HTMLElement*> elements, int index = 0
 
         printf("]");
 
-        if (element->type() == std::string("text")) {
+        if (element->type() == std::string("text") || element->type() == std::string("comment")) {
             printf(" - %s\n", element->raw_text().c_str());
         } else {
             printf("\n");
@@ -45,6 +45,7 @@ TEST_F(DemoTest, TestBackwardsCompat) {
     std::string code =
         "<html>"
             "<head>"
+                "<!-- hello -->"
                 "<link rel=\"stylesheet\" href=\"style.css\" />"
             "</head>"
             "<body>"

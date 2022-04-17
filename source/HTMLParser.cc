@@ -41,6 +41,7 @@
 
 #define NEW_ATTRS() std::map<std::string, std::string> element_attrs;
 #define ADD_ATTR(x, y)  element_attrs[x] = y;
+#define COMMENT_END() std::string("--")
 
 namespace HTMLParser {
     class Tokenizer;
@@ -82,6 +83,54 @@ namespace HTMLParser {
             // e.g. An empty element has a closing tag.
             // TODO: finish parsing the ending tag?
             IF_TOKEN(TokenType::DASH)
+                return;
+            END_BLOCK()
+
+            // We migh have encountered a comment.
+            IF_TOKEN(TokenType::EXCL)
+
+                GET_NEXT_TOKEN()
+                IGNORE_WHITE_SPACES()
+
+                if (_current_token->content.rfind("--", 0) == 0) {
+                    std::string token_copy = _current_token->content;
+
+                    token_copy.erase(0, 2);
+                    std::string comment_content = token_copy;
+
+                    PEEK()
+                    int end_comment = 0;
+                    if (peek->type == TokenType::CTAG) {
+                        GET_NEXT_TOKEN()
+                        GET_NEXT_TOKEN()
+                        end_comment = 1;
+                    }
+
+                    while (!end_comment) {
+                        GET_NEXT_TOKEN()
+
+                        if (_current_token->content.length() >= COMMENT_END().length()) {
+                            if (0 == _current_token->content.compare (_current_token->content.length() - COMMENT_END().length(), COMMENT_END().length(), COMMENT_END()  )) {
+
+                                PEEK()
+                                if (peek->type == CTAG) {
+                                    GET_NEXT_TOKEN()
+                                    GET_NEXT_TOKEN()
+                                    break;
+                                }
+                            }
+                        }
+
+                        comment_content += _current_token->content;
+                    }
+
+                    NEW_ELEMENT("#comment")
+                    element->set_raw_text(comment_content);
+                    element->set_type("comment");
+
+                    p_parent->add_element(element);
+                }
+
                 return;
             END_BLOCK()
 
