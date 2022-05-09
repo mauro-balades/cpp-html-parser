@@ -8,6 +8,7 @@
 
 #include <string>
 #include <typeinfo>
+#include <algorithm>
 
 #define GET_NEXT_TOKEN() END_IF_EOF() ; _current_token = std::next(_current_token, 1);
 #define GET_PREV_TOKEN() END_IF_EOF() ; _current_token = std::prev(_current_token, 1);
@@ -91,6 +92,21 @@ namespace HTMLParser {
 
                 GET_NEXT_TOKEN()
                 IGNORE_WHITE_SPACES()
+
+                // Parse a doctype declaration
+                std::string __idnt = _current_token->content;
+                std::transform(__idnt.begin(), __idnt.end(), __idnt.begin(), ::tolower );
+
+                if (__idnt == "doctype") {
+
+                    // TODO
+                    GET_NEXT_TOKEN() // Consume DOCTYPE
+
+                    IGNORE_WHITE_SPACES()
+                    IF_TOKEN(TokenType::CTAG)
+                        GET_NEXT_TOKEN()
+                    END_BLOCK()
+                }
 
                 // See if the current token starts with "--". We do this because
                 // "--" is considered as an identifier. This means that if we have
@@ -214,10 +230,11 @@ namespace HTMLParser {
             int element_is_autoclosed = detect_if_empty_element_by_tagname(tagname);
 
             // If there is a dash (/) we asume we encountered an empty class.
-            if (_current_token->type == TokenType::DASH) { // e.g. <input />
+            IF_TOKEN(TokenType::DASH) // e.g. <input />
                 element_is_autoclosed = 1;
                 GET_NEXT_TOKEN()
-            }
+            END_BLOCK()
+
 
             // If we found a closing tag symbol (>), we just consume
             // it. we expect a closing tag symbol anyways because we
@@ -232,7 +249,6 @@ namespace HTMLParser {
             if (!element_is_autoclosed) {
 
                 while (true) {
-
                     // Parse inner elements of the current element.
                     // <div><p></p></div>
                     //      ^~~~~~^       - inner

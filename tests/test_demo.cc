@@ -43,6 +43,7 @@ void printElements(std::vector<HTMLParser::HTMLElement*> elements, int index = 0
 
 TEST_F(DemoTest, TestBackwardsCompat) {
     std::string code =
+        "<!DOCTYPE >"
         "<html>"
             "<head>"
                 "<!-- hello -->"
